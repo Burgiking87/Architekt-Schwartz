@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Teammitglied von Architekt Schwartz — Rolle, Werdegang und Kontakt." />
-  <title id="pageTitle">Team — Architekt Schwartz</title>
-  <link rel="stylesheet" href="../css/style.css" />
+  <meta name="description" content="Architekt Schwartz — Architekturbüro in Wien für Privat-, Gewerbe- und Wohnbauten. Projekte, Team und Leistungen entdecken." />
+  <title>Architekt Schwartz — Architekturbüro</title>
+  <link rel="stylesheet" href="css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
@@ -25,99 +25,103 @@
   <div class="cursor-ring" id="cursorRing"></div>
 
   <nav id="mainNav">
-    <a class="logo" href="../index.html">ARCHITEKT <span>SCHWARTZ</span></a>
+    <a class="logo" href="index.html">ARCHITEKT <span>SCHWARTZ</span></a>
     <ul class="nav-links">
-      <li><a href="../index.html">Neuigkeiten</a></li>
-      <li><a href="./" class="active">Team</a></li>
+      <li><a href="#" class="active" onclick="showPage('home',this)">Neuigkeiten</a></li>
+      <li><a href="team/">Team</a></li>
       <li class="nav-dropdown">
-        <a href="../projekte/" class="nav-dropdown-toggle">Projekte</a>
+        <a href="projekte/" class="nav-dropdown-toggle">Projekte</a>
         <ul class="dropdown-menu">
-          <li><a href="../projekte/privatbauten/">Privatbauten</a></li>
-          <li><a href="../projekte/gewerbebauten/">Gewerbebauten</a></li>
-          <li><a href="../projekte/wohnbauten/">Wohnbauten</a></li>
+          <li><a href="projekte/privatbauten/">Privatbauten</a></li>
+          <li><a href="projekte/gewerbebauten/">Gewerbebauten</a></li>
+          <li><a href="projekte/wohnbauten/">Wohnbauten</a></li>
         </ul>
       </li>
-      <li><a href="../index.html#galerie">Galerie</a></li>
-      <li><a href="../leistungen/">Leistungen</a></li>
-      <li><a href="../kontakt/">Kontakt</a></li>
+      <li><a href="#" onclick="showPage('gallery',this)">Galerie</a></li>
+      <li><a href="leistungen/">Leistungen</a></li>
+      <li><a href="kontakt/">Kontakt</a></li>
     </ul>
     <button class="nav-toggle" id="navToggle" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
   </nav>
 
-  <div class="page active" id="memberFound" style="display:none;">
-    <a class="subpage-back member-back" href="index.html">← Zum Team</a>
-    <section class="member-hero">
-      <div class="member-portrait" id="memberPortrait"></div>
-      <div class="member-info">
-        <p class="hero-eyebrow animate" id="memberRole"></p>
-        <h1 class="subpage-title animate" id="memberName"></h1>
-        <div class="member-block animate">
-          <span class="contact-label">Werdegang</span>
-          <p class="member-bio" id="memberBio"></p>
-        </div>
-        <div class="member-block animate">
-          <span class="contact-label">Zuständigkeiten</span>
-          <div class="member-tags" id="memberTags"></div>
-        </div>
-        <div class="member-block animate">
-          <span class="contact-label">Kontakt</span>
-          <div class="member-contact">
-            <a class="member-contact-link" id="memberEmail" href="#"></a>
-            <a class="member-contact-link" href="tel:+4315123456">+43 1 512 34 56</a>
-          </div>
-        </div>
+  <!-- ═══════════════ PAGE: HOME ═══════════════ -->
+  <div class="page active" id="page-home">
+    <section class="hero">
+      <div class="hero-text">
+        <p class="hero-eyebrow animate">Wien · Gegründet 1998</p>
+        <h1 class="hero-headline split-lines animate">
+          Raum<br>schafft<br><em>Leben.</em>
+        </h1>
+        <p class="hero-body animate">
+          Wir entwerfen Gebäude, die mehr sind als Strukturen — sie sind Statements. 
+          Jedes Projekt verbindet funktionale Präzision mit zeitloser Ästhetik.
+        </p>
+        <a class="hero-cta animate" href="#" onclick="showPage('gallery', document.querySelector('.nav-links a[onclick*=&quot;gallery&quot;]')); return false;">
+          Galerie ansehen <span>→</span>
+        </a>
+      </div>
+      <div class="hero-visual" id="heroVisual">
+        <div class="building-scene house-mount" id="heroBuilding"></div>
+        <div class="hero-num">01</div>
+        <div class="parallax-bg" id="parallaxBg"></div>
       </div>
     </section>
+
+    <!-- Stats -->
+    <div class="stats-bar">
+      <div class="stat-item reveal-clip">
+        <div class="reveal-clip-inner">
+          <span class="stat-num" data-target="87">0</span>
+          <span class="stat-label">Projekte realisiert</span>
+        </div>
+      </div>
+      <div class="stat-item reveal-clip">
+        <div class="reveal-clip-inner">
+          <span class="stat-num" data-target="26">0</span>
+          <span class="stat-label">Jahre Erfahrung</span>
+        </div>
+      </div>
+      <div class="stat-item reveal-clip">
+        <div class="reveal-clip-inner">
+          <span class="stat-num" data-target="14">0</span>
+          <span class="stat-label">Auszeichnungen</span>
+        </div>
+      </div>
+      <div class="stat-item reveal-clip">
+        <div class="reveal-clip-inner">
+          <span class="stat-num" data-target="12">0</span>
+          <span class="stat-label">Teammitglieder</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PAGE: GALLERY ═══════════════ -->
+  <div class="page" id="page-gallery">
+    <section class="gallery-header">
+      <h1 class="gallery-title split-lines animate">Unsere<br><em>Projekte.</em></h1>
+      <div class="gallery-filters animate">
+        <button class="filter-btn active" onclick="filterGallery('all',this)">Alle</button>
+        <button class="filter-btn" onclick="filterGallery('gebaut',this)">Gebaut</button>
+        <button class="filter-btn" onclick="filterGallery('geplant',this)">Geplant</button>
+      </div>
+    </section>
+    <div class="gallery-masonry" id="galleryMasonry"></div>
     <footer>
       <div class="footer-logo">Architekt Schwartz</div>
       <div class="footer-right">
-        <a class="footer-impressum-link" href="../impressum/">Impressum</a>
+        <a class="footer-impressum-link" href="impressum/">Impressum</a>
         <div class="footer-copy">© 2024 — Wien, Österreich</div>
       </div>
     </footer>
   </div>
 
-  <div class="page active" id="memberNotFound">
-    <section class="subpage-hero">
-      <a class="subpage-back" href="index.html">← Zum Team</a>
-      <p class="hero-eyebrow">Team</p>
-      <h1 class="subpage-title">Nicht gefunden.</h1>
-      <p class="subpage-intro">Dieses Teammitglied existiert nicht (mehr). <a href="index.html">Zurück zur Übersicht →</a></p>
-    </section>
-    <footer>
-      <div class="footer-logo">Architekt Schwartz</div>
-      <div class="footer-right">
-        <a class="footer-impressum-link" href="../impressum/">Impressum</a>
-        <div class="footer-copy">© 2024 — Wien, Österreich</div>
-      </div>
-    </footer>
-  </div>
-
-  <script src="../js/buildings.js"></script>
-  <script src="../js/content-data.js"></script>
-  <script src="../js/house.js"></script>
-  <script>
-    (function () {
-      const id = new URLSearchParams(location.search).get('id');
-      const member = id ? teamMemberBySlug(id) : null;
-      const found = document.getElementById('memberFound');
-      const notFound = document.getElementById('memberNotFound');
-      if (!member) { notFound.style.display = 'block'; return; }
-      notFound.style.display = 'none';
-      found.style.display = 'block';
-      document.getElementById('pageTitle').textContent = member.name + ' — Architekt Schwartz';
-      document.getElementById('memberPortrait').innerHTML = makePortraitSVG(member.svgBg, member.svgAccent, TEAM_MEMBERS.indexOf(member));
-      document.getElementById('memberRole').textContent = member.role;
-      document.getElementById('memberName').textContent = member.name;
-      document.getElementById('memberBio').textContent = member.bio;
-      document.getElementById('memberTags').innerHTML = member.tags.map(t => '<span class="member-tag">' + t + '</span>').join('');
-      const emailLink = document.getElementById('memberEmail');
-      emailLink.href = 'mailto:' + member.email;
-      emailLink.textContent = member.email;
-    })();
-  </script>
-  <script src="../js/main.js"></script>
+  <script src="js/buildings.js"></script>
+  <script src="js/content-data.js"></script>
+  <script src="js/house.js"></script>
+  <script>window.PAGE_HOUSE = { mountId: 'heroBuilding', variant: 'floors', items: HOME_FLOORS };</script>
+  <script src="js/main.js"></script>
 </body>
 </html>
