@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kontakt — FORM & RAUM Architektur</title>
+  <meta name="description" content="Kontakt zu Architekt Schwartz — Adresse, Telefon, E-Mail und Kontaktformular in Wien." />
+  <title>Kontakt — Architekt Schwartz</title>
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,7 +25,7 @@
   <div class="cursor-ring" id="cursorRing"></div>
 
   <nav id="mainNav">
-    <a class="logo" href="../index.html">FORM <span>&</span> RAUM</a>
+    <a class="logo" href="../index.html">ARCHITEKT <span>SCHWARTZ</span></a>
     <ul class="nav-links">
       <li><a href="../index.html">Neuigkeiten</a></li>
       <li><a href="../team/">Team</a></li>
@@ -73,7 +74,7 @@
           <span class="contact-label">Telefon & E-Mail</span>
           <div class="contact-value">
             <a href="tel:+4315123456">+43 1 512 34 56</a><br>
-            <a href="mailto:office@form-raum.at">office@form-raum.at</a>
+            <a href="mailto:office@architekt-schwartz.at">office@architekt-schwartz.at</a>
           </div>
           <div class="kontakt-hours">Mo–Fr: 09:00 – 18:00</div>
         </div>
@@ -112,8 +113,11 @@
     </section>
 
     <footer>
-      <div class="footer-logo">FORM & RAUM Architektur ZT GmbH</div>
-      <div class="footer-copy">© 2024 — Wien, Österreich</div>
+      <div class="footer-logo">Architekt Schwartz</div>
+      <div class="footer-right">
+        <a class="footer-impressum-link" href="../impressum/">Impressum</a>
+        <div class="footer-copy">© 2024 — Wien, Österreich</div>
+      </div>
     </footer>
   </div>
 
@@ -130,7 +134,7 @@
       const body = data.get('message') +
         '\n\n— ' + data.get('name') + ' (' + data.get('email') + ')' +
         (telefon ? '\nTelefon: ' + telefon : '');
-      window.location.href = 'mailto:office@form-raum.at?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      window.location.href = 'mailto:office@architekt-schwartz.at?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
     });
   </script>
   <script src="../js/main.js"></script>
