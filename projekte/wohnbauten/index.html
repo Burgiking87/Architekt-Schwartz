@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wohnbauten — Projekte — FORM & RAUM Architektur</title>
+  <meta name="description" content="Wohnanlagen und mehrgeschoßiger Wohnbau von Architekt Schwartz." />
+  <title>Wohnbauten — Projekte — Architekt Schwartz</title>
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,7 +25,7 @@
   <div class="cursor-ring" id="cursorRing"></div>
 
   <nav id="mainNav">
-    <a class="logo" href="../../index.html">FORM <span>&</span> RAUM</a>
+    <a class="logo" href="../../index.html">ARCHITEKT <span>SCHWARTZ</span></a>
     <ul class="nav-links">
       <li><a href="../../index.html">Neuigkeiten</a></li>
       <li><a href="../../team/">Team</a></li>
@@ -50,21 +51,26 @@
       <a class="subpage-back" href="../">← Alle Projekte</a>
       <p class="hero-eyebrow animate">Projekte · Stockwerk</p>
       <h1 class="subpage-title split-lines animate">Wohnbauten.</h1>
-      <p class="subpage-intro animate">Wohnanlagen und mehrgeschoßiger Wohnbau.</p>
+      <p class="subpage-intro animate">Wohnanlagen und mehrgeschoßiger Wohnbau — ein Fenster, ein Projekt, anklicken für Details.</p>
     </section>
 
-    <div class="projekte-list" id="pageList"></div>
+    <section class="subpage-house-wrap">
+      <div class="subpage-house house-mount" id="pageHouse"></div>
+    </section>
 
     <footer>
-      <div class="footer-logo">FORM & RAUM Architektur ZT GmbH</div>
-      <div class="footer-copy">© 2024 — Wien, Österreich</div>
+      <div class="footer-logo">Architekt Schwartz</div>
+      <div class="footer-right">
+        <a class="footer-impressum-link" href="../../impressum/">Impressum</a>
+        <div class="footer-copy">© 2024 — Wien, Österreich</div>
+      </div>
     </footer>
   </div>
 
   <script src="../../js/buildings.js"></script>
   <script src="../../js/content-data.js"></script>
   <script src="../../js/house.js"></script>
-  <script>window.PAGE_LIST = { mountId: 'pageList', projects: projekteInKategorie('wohnbauten') };</script>
+  <script>window.PAGE_HOUSE = { mountId: 'pageHouse', variant: 'scattered', bodyWidth: 320, items: projekteFensterItems('wohnbauten') };</script>
   <script src="../../js/main.js"></script>
 </body>
 </html>
