@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title id="pageTitle">Team — FORM & RAUM Architektur</title>
+  <meta name="description" content="Teammitglied von Architekt Schwartz — Rolle, Werdegang und Kontakt." />
+  <title id="pageTitle">Team — Architekt Schwartz</title>
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,7 +25,7 @@
   <div class="cursor-ring" id="cursorRing"></div>
 
   <nav id="mainNav">
-    <a class="logo" href="../index.html">FORM <span>&</span> RAUM</a>
+    <a class="logo" href="../index.html">ARCHITEKT <span>SCHWARTZ</span></a>
     <ul class="nav-links">
       <li><a href="../index.html">Neuigkeiten</a></li>
       <li><a href="./" class="active">Team</a></li>
@@ -70,8 +71,11 @@
       </div>
     </section>
     <footer>
-      <div class="footer-logo">FORM & RAUM Architektur ZT GmbH</div>
-      <div class="footer-copy">© 2024 — Wien, Österreich</div>
+      <div class="footer-logo">Architekt Schwartz</div>
+      <div class="footer-right">
+        <a class="footer-impressum-link" href="../impressum/">Impressum</a>
+        <div class="footer-copy">© 2024 — Wien, Österreich</div>
+      </div>
     </footer>
   </div>
 
@@ -83,8 +87,11 @@
       <p class="subpage-intro">Dieses Teammitglied existiert nicht (mehr). <a href="index.html">Zurück zur Übersicht →</a></p>
     </section>
     <footer>
-      <div class="footer-logo">FORM & RAUM Architektur ZT GmbH</div>
-      <div class="footer-copy">© 2024 — Wien, Österreich</div>
+      <div class="footer-logo">Architekt Schwartz</div>
+      <div class="footer-right">
+        <a class="footer-impressum-link" href="../impressum/">Impressum</a>
+        <div class="footer-copy">© 2024 — Wien, Österreich</div>
+      </div>
     </footer>
   </div>
 
@@ -100,7 +107,7 @@
       if (!member) { notFound.style.display = 'block'; return; }
       notFound.style.display = 'none';
       found.style.display = 'block';
-      document.getElementById('pageTitle').textContent = member.name + ' — FORM & RAUM Architektur';
+      document.getElementById('pageTitle').textContent = member.name + ' — Architekt Schwartz';
       document.getElementById('memberPortrait').innerHTML = makePortraitSVG(member.svgBg, member.svgAccent, TEAM_MEMBERS.indexOf(member));
       document.getElementById('memberRole').textContent = member.role;
       document.getElementById('memberName').textContent = member.name;
