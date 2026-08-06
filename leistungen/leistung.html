@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title id="pageTitle">Leistungen — FORM & RAUM Architektur</title>
+  <meta name="description" content="Leistung von Architekt Schwartz im Detail." />
+  <title id="pageTitle">Leistungen — Architekt Schwartz</title>
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,7 +25,7 @@
   <div class="cursor-ring" id="cursorRing"></div>
 
   <nav id="mainNav">
-    <a class="logo" href="../index.html">FORM <span>&</span> RAUM</a>
+    <a class="logo" href="../index.html">ARCHITEKT <span>SCHWARTZ</span></a>
     <ul class="nav-links">
       <li><a href="../index.html">Neuigkeiten</a></li>
       <li><a href="../team/">Team</a></li>
@@ -54,8 +55,11 @@
       <a class="hero-cta animate" href="../kontakt/">Projekt anfragen <span>→</span></a>
     </section>
     <footer>
-      <div class="footer-logo">FORM & RAUM Architektur ZT GmbH</div>
-      <div class="footer-copy">© 2024 — Wien, Österreich</div>
+      <div class="footer-logo">Architekt Schwartz</div>
+      <div class="footer-right">
+        <a class="footer-impressum-link" href="../impressum/">Impressum</a>
+        <div class="footer-copy">© 2024 — Wien, Österreich</div>
+      </div>
     </footer>
   </div>
 
@@ -67,8 +71,11 @@
       <p class="subpage-intro">Diese Leistung existiert nicht (mehr). <a href="index.html">Zurück zur Übersicht →</a></p>
     </section>
     <footer>
-      <div class="footer-logo">FORM & RAUM Architektur ZT GmbH</div>
-      <div class="footer-copy">© 2024 — Wien, Österreich</div>
+      <div class="footer-logo">Architekt Schwartz</div>
+      <div class="footer-right">
+        <a class="footer-impressum-link" href="../impressum/">Impressum</a>
+        <div class="footer-copy">© 2024 — Wien, Österreich</div>
+      </div>
     </footer>
   </div>
 
@@ -84,7 +91,7 @@
       if (!leistung) { notFound.style.display = 'block'; return; }
       notFound.style.display = 'none';
       found.style.display = 'block';
-      document.getElementById('pageTitle').textContent = leistung.label + ' — FORM & RAUM Architektur';
+      document.getElementById('pageTitle').textContent = leistung.label + ' — Architekt Schwartz';
       document.getElementById('leistungKurztext').textContent = leistung.kurztext;
       document.getElementById('leistungLabel').textContent = leistung.label + '.';
       document.getElementById('leistungText').textContent = leistung.text;
