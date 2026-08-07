@@ -27,7 +27,7 @@
   <nav id="mainNav">
     <a class="logo" href="index.html">ARCHITEKT <span>SCHWARTZ</span></a>
     <ul class="nav-links">
-      <li><a href="#" class="active" onclick="showPage('home',this)">Neuigkeiten</a></li>
+      <li><a href="index.html" class="active">Neuigkeiten</a></li>
       <li><a href="team/">Team</a></li>
       <li class="nav-dropdown">
         <a href="projekte/" class="nav-dropdown-toggle">Projekte</a>
@@ -37,7 +37,7 @@
           <li><a href="projekte/wohnbauten/">Wohnbauten</a></li>
         </ul>
       </li>
-      <li><a href="#" onclick="showPage('gallery',this)">Galerie</a></li>
+      <li><a href="index.html#galerie">Galerie</a></li>
       <li><a href="leistungen/">Leistungen</a></li>
       <li><a href="kontakt/">Kontakt</a></li>
     </ul>
@@ -46,30 +46,18 @@
     </button>
   </nav>
 
-  <!-- ═══════════════ PAGE: HOME ═══════════════ -->
-  <div class="page active" id="page-home">
-    <section class="hero">
-      <div class="hero-text">
-        <p class="hero-eyebrow animate">Wien · Gegründet 1998</p>
-        <h1 class="hero-headline split-lines animate">
-          Raum<br>schafft<br><em>Leben.</em>
-        </h1>
-        <p class="hero-body animate">
-          Wir entwerfen Gebäude, die mehr sind als Strukturen — sie sind Statements. 
-          Jedes Projekt verbindet funktionale Präzision mit zeitloser Ästhetik.
-        </p>
-        <a class="hero-cta animate" href="#" onclick="showPage('gallery', document.querySelector('.nav-links a[onclick*=&quot;gallery&quot;]')); return false;">
-          Galerie ansehen <span>→</span>
-        </a>
+  <div class="page active">
+    <section class="shell">
+      <div class="shell-panel">
+        <h1 class="site-title">Architekt <em>Schwartz</em></h1>
+        <div class="detail-panel" id="detailPanel"></div>
       </div>
-      <div class="hero-visual" id="heroVisual">
-        <div class="building-scene house-mount" id="heroBuilding"></div>
-        <div class="hero-num">01</div>
+      <div class="shell-visual" id="houseStage">
         <div class="parallax-bg" id="parallaxBg"></div>
+        <div class="shell-house house-mount" id="pageHouse"></div>
       </div>
     </section>
 
-    <!-- Stats -->
     <div class="stats-bar">
       <div class="stat-item reveal-clip">
         <div class="reveal-clip-inner">
@@ -96,11 +84,8 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- ═══════════════ PAGE: GALLERY ═══════════════ -->
-  <div class="page" id="page-gallery">
-    <section class="gallery-header">
+    <section class="gallery-header" id="galerie">
       <h1 class="gallery-title split-lines animate">Unsere<br><em>Projekte.</em></h1>
       <div class="gallery-filters animate">
         <button class="filter-btn active" onclick="filterGallery('all',this)">Alle</button>
@@ -109,6 +94,7 @@
       </div>
     </section>
     <div class="gallery-masonry" id="galleryMasonry"></div>
+
     <footer>
       <div class="footer-logo">Architekt Schwartz</div>
       <div class="footer-right">
@@ -121,7 +107,7 @@
   <script src="js/buildings.js"></script>
   <script src="js/content-data.js"></script>
   <script src="js/house.js"></script>
-  <script>window.PAGE_HOUSE = { mountId: 'heroBuilding', variant: 'floors', items: HOME_FLOORS };</script>
+  <script>window.PAGE_HOUSE = { mountId: 'pageHouse', variant: 'floors', items: HOME_FLOORS };</script>
   <script src="js/main.js"></script>
 </body>
 </html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Projektdetails von Architekt Schwartz — Bilder, Ort, Jahr und Beschreibung." />
+  <title id="pageTitle">Projekt — Architekt Schwartz</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <div class="noise-overlay" aria-hidden="true"></div>
+  <div class="scroll-progress" id="scrollProgress"><span id="scrollProgressBar"></span></div>
+  <div class="corner-marks" aria-hidden="true">
+    <span class="corner-mark tl">+</span>
+    <span class="corner-mark tr">+</span>
+    <span class="corner-mark bl">+</span>
+    <span class="corner-mark br">+</span>
+  </div>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav id="mainNav">
+    <a class="logo" href="../index.html">ARCHITEKT <span>SCHWARTZ</span></a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Neuigkeiten</a></li>
+      <li><a href="../team/">Team</a></li>
+      <li class="nav-dropdown">
+        <a href="../projekte/" class="nav-dropdown-toggle active">Projekte</a>
+        <ul class="dropdown-menu">
+          <li><a href="../projekte/privatbauten/">Privatbauten</a></li>
+          <li><a href="../projekte/gewerbebauten/">Gewerbebauten</a></li>
+          <li><a href="../projekte/wohnbauten/">Wohnbauten</a></li>
+        </ul>
+      </li>
+      <li><a href="../index.html#galerie">Galerie</a></li>
+      <li><a href="../leistungen/">Leistungen</a></li>
+      <li><a href="../kontakt/">Kontakt</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="page active">
+    <section class="shell">
+      <div class="shell-panel">
+        <a class="shell-back" id="projektBack" href="./">← Zu Projekte</a>
+        <h1 class="site-title">Architekt <em>Schwartz</em></h1>
+        <div class="detail-panel" id="detailPanel"></div>
+      </div>
+      <div class="shell-visual" id="houseStage">
+        <div class="parallax-bg" id="parallaxBg"></div>
+        <div class="shell-house house-mount" id="pageHouse"></div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-logo">Architekt Schwartz</div>
+      <div class="footer-right">
+        <a class="footer-impressum-link" href="../impressum/">Impressum</a>
+        <div class="footer-copy">© 2024 — Wien, Österreich</div>
+      </div>
+    </footer>
+  </div>
+
+  <div class="lightbox" id="lightbox" hidden>
+    <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+    <div class="lightbox-panel" role="dialog" aria-modal="true" aria-label="Bildansicht">
+      <button class="lightbox-close" id="lightboxClose" aria-label="Schließen">×</button>
+      <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Vorheriges Bild">‹</button>
+      <div class="lightbox-img-wrap" id="lightboxImgWrap"></div>
+      <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Nächstes Bild">›</button>
+      <div class="lightbox-caption" id="lightboxCaption"></div>
+    </div>
+  </div>
+
+  <script src="../js/buildings.js"></script>
+  <script src="../js/content-data.js"></script>
+  <script src="../js/house.js"></script>
+  <script>
+    (function () {
+      const id = new URLSearchParams(location.search).get('id');
+      const projekt = id ? projektBySlug(id) : null;
+
+      if (!projekt) {
+        window.PAGE_HOUSE = { mountId: 'pageHouse', variant: 'floors', items: PROJEKT_KATEGORIEN };
+        window.PAGE_DETAIL = {
+          eyebrow: 'Projekte',
+          name: 'Nicht gefunden.',
+          text: 'Dieses Projekt existiert nicht (mehr). Wähle rechts im Haus eine Kategorie.'
+        };
+        return;
+      }
+
+      const katSlug = projektKategorieFalten(projekt.kategorie);
+      let katLabel = 'Projekte';
+      for (let i = 0; i < PROJEKT_KATEGORIEN.length; i++) {
+        if (PROJEKT_KATEGORIEN[i].slug === katSlug) katLabel = PROJEKT_KATEGORIEN[i].label;
+      }
+
+      document.getElementById('pageTitle').textContent = projekt.name + ' — Architekt Schwartz';
+      const back = document.getElementById('projektBack');
+      back.href = katSlug + '/';
+      back.textContent = '← Zu ' + katLabel;
+
+      window.PAGE_HOUSE = {
+        mountId: 'pageHouse',
+        variant: 'windows',
+        items: projektBilderFensterItems(projekt)
+      };
+      window.PAGE_DETAIL = {
+        eyebrow: 'Projekte · ' + katLabel,
+        name: projekt.name,
+        meta: projekt.location + ' · ' + projekt.year + ' · ' + projekt.type + ', ' + projekt.area
+          + ' · ' + (projekt.status === 'gebaut' ? 'Gebaut' : 'Geplant'),
+        text: projekt.kurzbeschreibung || ''
+      };
+      window.PROJEKT_BILDER = projektAlleBilder(projekt);
+      window.PROJEKT_NAME = projekt.name;
+    })();
+  </script>
+
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const bilder = window.PROJEKT_BILDER;
+      if (!bilder || !bilder.length) return;
+      const lightbox = document.getElementById('lightbox');
+      const imgWrap = document.getElementById('lightboxImgWrap');
+      const caption = document.getElementById('lightboxCaption');
+      let currentIndex = 0;
+      let lastFocused = null;
+
+      function renderBild(i) {
+        currentIndex = (i + bilder.length) % bilder.length;
+        const bild = bilder[currentIndex];
+        imgWrap.innerHTML = '<svg viewBox="' + bild.viewBox + '" xmlns="http://www.w3.org/2000/svg">' + bild.svgContent + '</svg>';
+        caption.textContent = (window.PROJEKT_NAME || '') + ' — ' + bild.label + ' (' + (currentIndex + 1) + '/' + bilder.length + ')';
+      }
+      function openLightbox(i, trigger) {
+        lastFocused = trigger || document.activeElement;
+        renderBild(i);
+        lightbox.hidden = false;
+        document.getElementById('lightboxClose').focus();
+        document.addEventListener('keydown', onKeydown);
+      }
+      function closeLightbox() {
+        lightbox.hidden = true;
+        document.removeEventListener('keydown', onKeydown);
+        if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+      }
+      function onKeydown(e) {
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowRight') renderBild(currentIndex + 1);
+        if (e.key === 'ArrowLeft') renderBild(currentIndex - 1);
+      }
+
+      document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+      document.getElementById('lightboxBackdrop').addEventListener('click', closeLightbox);
+      document.getElementById('lightboxPrev').addEventListener('click', function () { renderBild(currentIndex - 1); });
+      document.getElementById('lightboxNext').addEventListener('click', function () { renderBild(currentIndex + 1); });
+
+      document.querySelectorAll('#pageHouse .house-overlay a').forEach(function (a, i) {
+        a.addEventListener('click', function (e) { e.preventDefault(); openLightbox(i, a); });
+      });
+    });
+  </script>
+</body>
+</html>

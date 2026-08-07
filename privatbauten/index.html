@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Privatbauten von Architekt Schwartz — Einfamilienhäuser und private Wohnbauten." />
+  <title>Privatbauten — Projekte — Architekt Schwartz</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <div class="noise-overlay" aria-hidden="true"></div>
+  <div class="scroll-progress" id="scrollProgress"><span id="scrollProgressBar"></span></div>
+  <div class="corner-marks" aria-hidden="true">
+    <span class="corner-mark tl">+</span>
+    <span class="corner-mark tr">+</span>
+    <span class="corner-mark bl">+</span>
+    <span class="corner-mark br">+</span>
+  </div>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav id="mainNav">
+    <a class="logo" href="../../index.html">ARCHITEKT <span>SCHWARTZ</span></a>
+    <ul class="nav-links">
+      <li><a href="../../index.html">Neuigkeiten</a></li>
+      <li><a href="../../team/">Team</a></li>
+      <li class="nav-dropdown">
+        <a href="../../projekte/" class="nav-dropdown-toggle active">Projekte</a>
+        <ul class="dropdown-menu">
+          <li><a href="../../projekte/privatbauten/" class="active">Privatbauten</a></li>
+          <li><a href="../../projekte/gewerbebauten/">Gewerbebauten</a></li>
+          <li><a href="../../projekte/wohnbauten/">Wohnbauten</a></li>
+        </ul>
+      </li>
+      <li><a href="../../index.html#galerie">Galerie</a></li>
+      <li><a href="../../leistungen/">Leistungen</a></li>
+      <li><a href="../../kontakt/">Kontakt</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="page active">
+    <section class="shell">
+      <div class="shell-panel">
+        <a class="shell-back" href="../">← Alle Projekte</a>
+        <h1 class="site-title">Architekt <em>Schwartz</em></h1>
+        <div class="detail-panel" id="detailPanel"></div>
+      </div>
+      <div class="shell-visual" id="houseStage">
+        <div class="parallax-bg" id="parallaxBg"></div>
+        <div class="shell-house house-mount" id="pageHouse"></div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-logo">Architekt Schwartz</div>
+      <div class="footer-right">
+        <a class="footer-impressum-link" href="../../impressum/">Impressum</a>
+        <div class="footer-copy">© 2024 — Wien, Österreich</div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="../../js/buildings.js"></script>
+  <script src="../../js/content-data.js"></script>
+  <script src="../../js/house.js"></script>
+  <script>window.PAGE_HOUSE = { mountId: 'pageHouse', variant: 'scattered', items: projekteFensterItems('privatbauten') };</script>
+  <script src="../../js/main.js"></script>
+</body>
+</html>
