@@ -9,6 +9,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <script>
+    /* Neue Ebene fährt von unten herein (siehe js/transitions.js).
+       Sicherheitsnetz, falls das Skript nicht geladen wird. */
+    (function () {
+      try {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        document.documentElement.classList.add('stage-entering');
+        window.setTimeout(function () {
+          document.documentElement.classList.remove('stage-entering');
+        }, 1500);
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
 
@@ -24,72 +37,38 @@
   <div class="cursor" id="cursor"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
-  <nav id="mainNav">
-    <a class="logo" href="../index.html">ARCHITEKT <span>SCHWARTZ</span></a>
-    <ul class="nav-links">
-      <li><a href="../index.html">Neuigkeiten</a></li>
-      <li><a href="../team/">Team</a></li>
-      <li class="nav-dropdown">
-        <a href="./" class="nav-dropdown-toggle active">Projekte</a>
-        <ul class="dropdown-menu">
-          <li><a href="privatbauten/">Privatbauten</a></li>
-          <li><a href="gewerbebauten/">Gewerbebauten</a></li>
-          <li><a href="wohnbauten/">Wohnbauten</a></li>
-        </ul>
-      </li>
-      <li><a href="../index.html#galerie">Galerie</a></li>
-      <li><a href="../leistungen/">Leistungen</a></li>
-      <li><a href="../kontakt/">Kontakt</a></li>
-    </ul>
-    <button class="nav-toggle" id="navToggle" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
+    <aside class="sidebar">
+    <a class="brand" href="../index.html" aria-label="Architekt Schwartz — Startseite">
+      <span class="brand-line">Architekt</span>
+      <span class="brand-line brand-line-serif">Schwartz</span>
+    </a>
 
-  <div class="page active" id="projektFound" style="display:none;">
-    <section class="subpage-hero">
-      <a class="subpage-back" id="projektBack" href="./">← Zur Kategorie</a>
-      <p class="hero-eyebrow animate" id="projektEyebrow">Projekt</p>
-      <h1 class="subpage-title split-lines animate" id="projektName"></h1>
-      <p class="subpage-intro animate" id="projektKurzbeschreibung"></p>
-    </section>
+    <div class="detail-panel" id="detailPanel"></div>
 
-    <section class="subpage-house-wrap">
-      <div class="subpage-house house-mount" id="pageHouse"></div>
-    </section>
+    <div class="sidebar-foot">
+      <a class="sidebar-link" href="../index.html#galerie">Galerie</a>
+      <a class="sidebar-link" href="../impressum/">Impressum</a>
+      <span class="sidebar-copy" data-editable="source" data-path="/projekte/projekt.html" data-key="sidebar-copy-1" data-type="span">© 2024 — Wien, Österreich</span>
+    </div>
+  </aside>
 
-    <section class="projekt-info">
-      <div class="projekt-info-main">
-        <span class="projekte-row-status" id="projektStatus"></span>
-      </div>
-      <p class="projekt-info-loc" id="projektOrtJahr"></p>
-      <p class="projekt-info-desc" id="projektBeschreibung"></p>
-    </section>
+  <main class="stage" id="stage">
+  <section class="house-view" id="houseStage">
+    <a class="stage-back" id="projektBack" href="./">← Zu Projekte</a>
+    <div class="parallax-bg" id="parallaxBg"></div>
+    <div class="house-view-inner">
+      <div class="shell-house house-mount" id="pageHouse"></div>
+    </div>
+  </section>
 
     <footer>
-      <div class="footer-logo">Architekt Schwartz</div>
+      <div class="footer-logo" data-editable="source" data-path="/projekte/projekt.html" data-key="footer-logo-2" data-type="text">Architekt Schwartz</div>
       <div class="footer-right">
         <a class="footer-impressum-link" href="../impressum/">Impressum</a>
-        <div class="footer-copy">© 2024 — Wien, Österreich</div>
+        <div class="footer-copy" data-editable="source" data-path="/projekte/projekt.html" data-key="footer-copy-3" data-type="text">© 2024 — Wien, Österreich</div>
       </div>
     </footer>
-  </div>
-
-  <div class="page active" id="projektNotFound">
-    <section class="subpage-hero">
-      <a class="subpage-back" href="./">← Zu Projekte</a>
-      <p class="hero-eyebrow">Projekte</p>
-      <h1 class="subpage-title">Nicht gefunden.</h1>
-      <p class="subpage-intro">Dieses Projekt existiert nicht (mehr). <a href="./">Zurück zur Übersicht →</a></p>
-    </section>
-    <footer>
-      <div class="footer-logo">Architekt Schwartz</div>
-      <div class="footer-right">
-        <a class="footer-impressum-link" href="../impressum/">Impressum</a>
-        <div class="footer-copy">© 2024 — Wien, Österreich</div>
-      </div>
-    </footer>
-  </div>
+</main>
 
   <div class="lightbox" id="lightbox" hidden>
     <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
@@ -109,37 +88,47 @@
     (function () {
       const id = new URLSearchParams(location.search).get('id');
       const projekt = id ? projektBySlug(id) : null;
-      const found = document.getElementById('projektFound');
-      const notFound = document.getElementById('projektNotFound');
-      if (!projekt) { notFound.style.display = 'block'; return; }
-      notFound.style.display = 'none';
-      found.style.display = 'block';
+
+      if (!projekt) {
+        window.PAGE_HOUSE = { mountId: 'pageHouse', variant: 'floors', items: PROJEKT_KATEGORIEN };
+        window.PAGE_DETAIL = {
+          eyebrow: 'Projekte',
+          name: 'Nicht gefunden.',
+          text: 'Dieses Projekt existiert nicht (mehr). Wähle rechts im Haus eine Kategorie.'
+        };
+        return;
+      }
 
       const katSlug = projektKategorieFalten(projekt.kategorie);
-      const katLabel = (PROJEKT_KATEGORIEN.find(function (k) { return k.slug === katSlug; }) || {}).label || 'Projekte';
-      document.getElementById('projektBack').href = katSlug + '/';
-      document.getElementById('projektBack').textContent = '← Zu ' + katLabel;
+      let katLabel = 'Projekte';
+      for (let i = 0; i < PROJEKT_KATEGORIEN.length; i++) {
+        if (PROJEKT_KATEGORIEN[i].slug === katSlug) katLabel = PROJEKT_KATEGORIEN[i].label;
+      }
+
       document.getElementById('pageTitle').textContent = projekt.name + ' — Architekt Schwartz';
-      document.getElementById('projektEyebrow').textContent = 'Projekte · ' + katLabel;
-      document.getElementById('projektName').textContent = projekt.name + '.';
-      document.getElementById('projektKurzbeschreibung').textContent = projekt.kurzbeschreibung || '';
-      document.getElementById('projektOrtJahr').textContent = projekt.location + ' · ' + projekt.year + ' · ' + projekt.type + ', ' + projekt.area;
-      document.getElementById('projektBeschreibung').textContent = projekt.kurzbeschreibung || '';
-      const statusEl = document.getElementById('projektStatus');
-      statusEl.textContent = projekt.status === 'gebaut' ? 'Gebaut' : 'Geplant';
-      statusEl.classList.add('status-' + projekt.status);
+      const back = document.getElementById('projektBack');
+      back.href = katSlug + '/';
+      back.textContent = '← Zu ' + katLabel;
 
       window.PAGE_HOUSE = {
         mountId: 'pageHouse',
         variant: 'windows',
-        bodyWidth: 280,
         items: projektBilderFensterItems(projekt)
+      };
+      window.PAGE_DETAIL = {
+        eyebrow: 'Projekte · ' + katLabel,
+        name: projekt.name,
+        meta: projekt.location + ' · ' + projekt.year + ' · ' + projekt.type + ', ' + projekt.area
+          + ' · ' + (projekt.status === 'gebaut' ? 'Gebaut' : 'Geplant'),
+        text: projekt.kurzbeschreibung || ''
       };
       window.PROJEKT_BILDER = projektAlleBilder(projekt);
       window.PROJEKT_NAME = projekt.name;
     })();
   </script>
+
   <script src="../js/main.js"></script>
+  <script src="../js/transitions.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const bilder = window.PROJEKT_BILDER;
@@ -156,7 +145,6 @@
         imgWrap.innerHTML = '<svg viewBox="' + bild.viewBox + '" xmlns="http://www.w3.org/2000/svg">' + bild.svgContent + '</svg>';
         caption.textContent = (window.PROJEKT_NAME || '') + ' — ' + bild.label + ' (' + (currentIndex + 1) + '/' + bilder.length + ')';
       }
-
       function openLightbox(i, trigger) {
         lastFocused = trigger || document.activeElement;
         renderBild(i);
@@ -164,13 +152,11 @@
         document.getElementById('lightboxClose').focus();
         document.addEventListener('keydown', onKeydown);
       }
-
       function closeLightbox() {
         lightbox.hidden = true;
         document.removeEventListener('keydown', onKeydown);
         if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
       }
-
       function onKeydown(e) {
         if (e.key === 'Escape') closeLightbox();
         if (e.key === 'ArrowRight') renderBild(currentIndex + 1);
@@ -182,12 +168,8 @@
       document.getElementById('lightboxPrev').addEventListener('click', function () { renderBild(currentIndex - 1); });
       document.getElementById('lightboxNext').addEventListener('click', function () { renderBild(currentIndex + 1); });
 
-      const houseLinks = document.querySelectorAll('#pageHouse .house-overlay a');
-      houseLinks.forEach(function (a, i) {
-        a.addEventListener('click', function (e) {
-          e.preventDefault();
-          openLightbox(i, a);
-        });
+      document.querySelectorAll('#pageHouse .house-overlay a').forEach(function (a, i) {
+        a.addEventListener('click', function (e) { e.preventDefault(); openLightbox(i, a); });
       });
     });
   </script>
