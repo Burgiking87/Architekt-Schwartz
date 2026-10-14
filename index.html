@@ -9,6 +9,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <script>
+    /* Neue Ebene fährt von unten herein (siehe js/transitions.js).
+       Sicherheitsnetz, falls das Skript nicht geladen wird. */
+    (function () {
+      try {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        document.documentElement.classList.add('stage-entering');
+        window.setTimeout(function () {
+          document.documentElement.classList.remove('stage-entering');
+        }, 1500);
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
 
@@ -24,63 +37,53 @@
   <div class="cursor" id="cursor"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
-  <nav id="mainNav">
-    <a class="logo" href="index.html">ARCHITEKT <span>SCHWARTZ</span></a>
-    <ul class="nav-links">
-      <li><a href="index.html" class="active">Neuigkeiten</a></li>
-      <li><a href="team/">Team</a></li>
-      <li class="nav-dropdown">
-        <a href="projekte/" class="nav-dropdown-toggle">Projekte</a>
-        <ul class="dropdown-menu">
-          <li><a href="projekte/privatbauten/">Privatbauten</a></li>
-          <li><a href="projekte/gewerbebauten/">Gewerbebauten</a></li>
-          <li><a href="projekte/wohnbauten/">Wohnbauten</a></li>
-        </ul>
-      </li>
-      <li><a href="index.html#galerie">Galerie</a></li>
-      <li><a href="leistungen/">Leistungen</a></li>
-      <li><a href="kontakt/">Kontakt</a></li>
-    </ul>
-    <button class="nav-toggle" id="navToggle" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
 
-  <div class="page active">
-    <section class="shell">
-      <div class="shell-panel">
-        <h1 class="site-title">Architekt <em>Schwartz</em></h1>
-        <div class="detail-panel" id="detailPanel"></div>
-      </div>
-      <div class="shell-visual" id="houseStage">
-        <div class="parallax-bg" id="parallaxBg"></div>
-        <div class="shell-house house-mount" id="pageHouse"></div>
-      </div>
-    </section>
+    <aside class="sidebar">
+    <a class="brand" href="index.html" aria-label="Architekt Schwartz — Startseite">
+      <span class="brand-line">Architekt</span>
+      <span class="brand-line brand-line-serif">Schwartz</span>
+    </a>
+
+    <div class="detail-panel" id="detailPanel"></div>
+
+    <div class="sidebar-foot">
+      <a class="sidebar-link" href="index.html#galerie">Galerie</a>
+      <a class="sidebar-link" href="impressum/">Impressum</a>
+      <span class="sidebar-copy" data-editable="source" data-path="/index.html" data-key="sidebar-copy-1" data-type="span">© 2024 — Wien, Österreich</span>
+    </div>
+  </aside>
+
+  <main class="stage" id="stage">
+  <section class="house-view" id="houseStage">
+    <div class="parallax-bg" id="parallaxBg"></div>
+    <div class="house-view-inner">
+      <div class="shell-house house-mount" id="pageHouse"></div>
+    </div>
+  </section>
 
     <div class="stats-bar">
       <div class="stat-item reveal-clip">
         <div class="reveal-clip-inner">
           <span class="stat-num" data-target="87">0</span>
-          <span class="stat-label">Projekte realisiert</span>
+          <span class="stat-label" data-editable="source" data-path="/index.html" data-key="stat-label-2" data-type="span">Projekte realisiert</span>
         </div>
       </div>
       <div class="stat-item reveal-clip">
         <div class="reveal-clip-inner">
           <span class="stat-num" data-target="26">0</span>
-          <span class="stat-label">Jahre Erfahrung</span>
+          <span class="stat-label" data-editable="source" data-path="/index.html" data-key="stat-label-3" data-type="span">Jahre Erfahrung</span>
         </div>
       </div>
       <div class="stat-item reveal-clip">
         <div class="reveal-clip-inner">
           <span class="stat-num" data-target="14">0</span>
-          <span class="stat-label">Auszeichnungen</span>
+          <span class="stat-label" data-editable="source" data-path="/index.html" data-key="stat-label-4" data-type="span">Auszeichnungen</span>
         </div>
       </div>
       <div class="stat-item reveal-clip">
         <div class="reveal-clip-inner">
           <span class="stat-num" data-target="12">0</span>
-          <span class="stat-label">Teammitglieder</span>
+          <span class="stat-label" data-editable="source" data-path="/index.html" data-key="stat-label-5" data-type="span">Teammitglieder</span>
         </div>
       </div>
     </div>
@@ -96,18 +99,19 @@
     <div class="gallery-masonry" id="galleryMasonry"></div>
 
     <footer>
-      <div class="footer-logo">Architekt Schwartz</div>
+      <div class="footer-logo" data-editable="source" data-path="/index.html" data-key="footer-logo-7" data-type="text">Architekt Schwartz</div>
       <div class="footer-right">
         <a class="footer-impressum-link" href="impressum/">Impressum</a>
-        <div class="footer-copy">© 2024 — Wien, Österreich</div>
+        <div class="footer-copy" data-editable="source" data-path="/index.html" data-key="footer-copy-8" data-type="text">© 2024 — Wien, Österreich</div>
       </div>
     </footer>
-  </div>
+</main>
 
   <script src="js/buildings.js"></script>
   <script src="js/content-data.js"></script>
   <script src="js/house.js"></script>
   <script>window.PAGE_HOUSE = { mountId: 'pageHouse', variant: 'floors', items: HOME_FLOORS };</script>
   <script src="js/main.js"></script>
+  <script src="js/transitions.js"></script>
 </body>
 </html>
