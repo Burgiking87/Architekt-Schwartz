@@ -1,0 +1,22 @@
+# CloudCannon-Konfiguration — Architekt Schwartz
+# Startpunkt. Die Sammlung "Seiten" wird in der CloudCannon-Oberfläche
+# (Configuration Mode) verfeinert, sobald die Site verbunden ist.
+
+source: /
+
+# Ordner, in den der Bild-Editor hochgeladene Bilder legt
+paths:
+  uploads: images
+
+# Die 12 HTML-Seiten als Sammlung, damit der Visual Editor sie kennt.
+collections_config:
+  pages:
+    name: Seiten
+    icon: wysiwyg
+    path: ''
+    glob:
+      - '**/*.html'
+    url: /[full_slug]/
+    _enabled_editors:
+      - visual
+      - source
