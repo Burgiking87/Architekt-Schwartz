@@ -1,6 +1,6 @@
 // ══════════════════════════════════════════
 // main.js — Interactivity & Animations
-// ════════════════════════════════════════════
+// ══════════════════════════════════════════
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -313,7 +313,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ────────────────────────────────────
-
      HAUS — ATMOSPHÄRE BEI MAUSBEWEGUNG
 
      Der Baukörper selbst bleibt bewusst unbewegt: Er ist der feste Rahmen,
