@@ -601,7 +601,6 @@ nav {
   transform: translateY(-6px);
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
 }
-
 .gallery-img-wrap {
   overflow: hidden;
   background: var(--gray-deep);
@@ -666,10 +665,8 @@ nav {
 .contact-value a { color: var(--white); text-decoration: none; border-bottom: 1px solid var(--gray-dark); transition: border-color 0.3s; }
 .contact-value a:hover { border-color: var(--white); }
 
-.kontakt-block {
-  padding: 4rem 3rem; border-bottom: var(--line);
-  scroll-margin-top: 100px;
-}
+.kontakt-block { padding: 4rem 3rem; border-bottom: var(--line); scroll-margin-top: 100px; }
+.kontakt-block-inner { max-width: 640px; }
 .kontakt-maplink {
   display: inline-block; margin-top: 1.2rem;
   font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase;
