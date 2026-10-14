@@ -9,6 +9,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <script>
+    /* Neue Ebene fährt von unten herein (siehe js/transitions.js).
+       Sicherheitsnetz, falls das Skript nicht geladen wird. */
+    (function () {
+      try {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        document.documentElement.classList.add('stage-entering');
+        window.setTimeout(function () {
+          document.documentElement.classList.remove('stage-entering');
+        }, 1500);
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
 
@@ -24,60 +37,39 @@
   <div class="cursor" id="cursor"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
-  <nav id="mainNav">
-    <a class="logo" href="../index.html">ARCHITEKT <span>SCHWARTZ</span></a>
-    <ul class="nav-links">
-      <li><a href="../index.html">Neuigkeiten</a></li>
-      <li><a href="../team/">Team</a></li>
-      <li class="nav-dropdown">
-        <a href="../projekte/" class="nav-dropdown-toggle">Projekte</a>
-        <ul class="dropdown-menu">
-          <li><a href="../projekte/privatbauten/">Privatbauten</a></li>
-          <li><a href="../projekte/gewerbebauten/">Gewerbebauten</a></li>
-          <li><a href="../projekte/wohnbauten/">Wohnbauten</a></li>
-        </ul>
-      </li>
-      <li><a href="../index.html#galerie">Galerie</a></li>
-      <li><a href="./" class="active">Leistungen</a></li>
-      <li><a href="../kontakt/">Kontakt</a></li>
-    </ul>
-    <button class="nav-toggle" id="navToggle" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
 
-  <div class="page active" id="leistungFound" style="display:none;">
-    <section class="subpage-hero">
-      <a class="subpage-back" href="index.html">← Zu Leistungen</a>
-      <p class="hero-eyebrow animate" id="leistungKurztext"></p>
-      <h1 class="subpage-title split-lines animate" id="leistungLabel"></h1>
-      <p class="subpage-intro animate" id="leistungText"></p>
-      <a class="hero-cta animate" href="../kontakt/">Projekt anfragen <span>→</span></a>
-    </section>
+    <aside class="sidebar">
+    <a class="brand" href="../index.html" aria-label="Architekt Schwartz — Startseite">
+      <span class="brand-line">Architekt</span>
+      <span class="brand-line brand-line-serif">Schwartz</span>
+    </a>
+
+    <div class="detail-panel" id="detailPanel"></div>
+
+    <div class="sidebar-foot">
+      <a class="sidebar-link" href="../index.html#galerie">Galerie</a>
+      <a class="sidebar-link" href="../impressum/">Impressum</a>
+      <span class="sidebar-copy" data-editable="source" data-path="/leistungen/leistung.html" data-key="sidebar-copy-1" data-type="span">© 2024 — Wien, Österreich</span>
+    </div>
+  </aside>
+
+  <main class="stage" id="stage">
+  <section class="house-view" id="houseStage">
+    <a class="stage-back" href="index.html">← Zu Leistungen</a>
+    <div class="parallax-bg" id="parallaxBg"></div>
+    <div class="house-view-inner">
+      <div class="shell-house house-mount" id="pageHouse"></div>
+    </div>
+  </section>
+
     <footer>
-      <div class="footer-logo">Architekt Schwartz</div>
+      <div class="footer-logo" data-editable="source" data-path="/leistungen/leistung.html" data-key="footer-logo-2" data-type="text">Architekt Schwartz</div>
       <div class="footer-right">
         <a class="footer-impressum-link" href="../impressum/">Impressum</a>
-        <div class="footer-copy">© 2024 — Wien, Österreich</div>
+        <div class="footer-copy" data-editable="source" data-path="/leistungen/leistung.html" data-key="footer-copy-3" data-type="text">© 2024 — Wien, Österreich</div>
       </div>
     </footer>
-  </div>
-
-  <div class="page active" id="leistungNotFound">
-    <section class="subpage-hero">
-      <a class="subpage-back" href="index.html">← Zu Leistungen</a>
-      <p class="hero-eyebrow">Leistungen</p>
-      <h1 class="subpage-title">Nicht gefunden.</h1>
-      <p class="subpage-intro">Diese Leistung existiert nicht (mehr). <a href="index.html">Zurück zur Übersicht →</a></p>
-    </section>
-    <footer>
-      <div class="footer-logo">Architekt Schwartz</div>
-      <div class="footer-right">
-        <a class="footer-impressum-link" href="../impressum/">Impressum</a>
-        <div class="footer-copy">© 2024 — Wien, Österreich</div>
-      </div>
-    </footer>
-  </div>
+</main>
 
   <script src="../js/buildings.js"></script>
   <script src="../js/content-data.js"></script>
@@ -86,17 +78,37 @@
     (function () {
       const id = new URLSearchParams(location.search).get('id');
       const leistung = id ? leistungById(id) : null;
-      const found = document.getElementById('leistungFound');
-      const notFound = document.getElementById('leistungNotFound');
-      if (!leistung) { notFound.style.display = 'block'; return; }
-      notFound.style.display = 'none';
-      found.style.display = 'block';
+      const items = LEISTUNGEN.map(function (l) {
+        return { slug: l.slug, label: l.fensterLabel || l.label, href: 'leistung.html?id=' + l.slug, ariaLabel: 'Leistung ' + l.label + ' ansehen' };
+      });
+
+      if (!leistung) {
+        window.PAGE_HOUSE = { mountId: 'pageHouse', variant: 'scattered', items: items };
+        window.PAGE_DETAIL = {
+          eyebrow: 'Leistungen',
+          name: 'Nicht gefunden.',
+          text: 'Diese Leistung existiert nicht (mehr). Wähle rechts im Haus ein anderes Fenster.'
+        };
+        return;
+      }
+
+      let idx = -1;
+      for (let i = 0; i < LEISTUNGEN.length; i++) {
+        if (LEISTUNGEN[i].slug === leistung.slug) idx = i;
+      }
       document.getElementById('pageTitle').textContent = leistung.label + ' — Architekt Schwartz';
-      document.getElementById('leistungKurztext').textContent = leistung.kurztext;
-      document.getElementById('leistungLabel').textContent = leistung.label + '.';
-      document.getElementById('leistungText').textContent = leistung.text;
+
+      window.PAGE_HOUSE = { mountId: 'pageHouse', variant: 'scattered', items: items, activeIndex: idx };
+      window.PAGE_DETAIL = {
+        eyebrow: leistung.kurztext,
+        name: leistung.label,
+        text: leistung.text,
+        links: [{ href: '../kontakt/', label: 'Projekt anfragen →' }]
+      };
     })();
   </script>
+
   <script src="../js/main.js"></script>
+  <script src="../js/transitions.js"></script>
 </body>
 </html>
