@@ -1,0 +1,7 @@
+# Umzugsweiterleitungen: alte Pfade -> neue Projektstruktur
+/privatbauten/*    /projekte/privatbauten/:splat    301
+/gewerbebauten/*   /projekte/gewerbebauten/:splat   301
+/wohnbauten/*      /projekte/wohnbauten/:splat      301
+/projekt.html      /projekte/projekt.html           301
+/mitglied.html     /team/mitglied.html              301
+/leistung.html     /leistungen/leistung.html        301

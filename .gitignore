@@ -1,0 +1,4 @@
+# Deploy-Paket / Downloads
+*.zip
+# Betriebssystem
+.DS_Store
