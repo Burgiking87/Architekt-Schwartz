@@ -85,34 +85,41 @@ function projektBilderFensterItems(projekt) {
 }
 
 // Leistungen — noch nicht im Bestand vorhanden, Platzhaltertexte zur Freigabe.
+// fensterLabel: kurze Beschriftung fürs Hausfenster (der volle Name aus
+// label steht auf der Detailseite).
 const LEISTUNGEN = [
   {
     slug: 'neubau-entwurf',
     label: 'Neubau & Entwurf',
+    fensterLabel: 'Neubau',
     kurztext: 'Vom ersten Skizzenstrich bis zur Einreichplanung.',
     text: 'Wir begleiten Neubauprojekte von der ersten Idee bis zur Einreichplanung — Konzept, Entwurf, Genehmigungsplanung aus einer Hand, abgestimmt auf Grundstück, Budget und Nutzung.'
   },
   {
     slug: 'sanierung-umbau',
     label: 'Sanierung & Umbau',
+    fensterLabel: 'Sanierung',
     kurztext: 'Bestand weiterdenken statt abreißen.',
     text: 'Ob Altbausanierung, energetische Ertüchtigung oder Umbau im laufenden Betrieb — wir entwickeln Bestandsgebäude behutsam weiter und verbinden historische Substanz mit zeitgemäßen Ansprüchen.'
   },
   {
     slug: 'innenraumgestaltung',
-    label: 'Innenraum­gestaltung',
+    label: 'Innenraumgestaltung',
+    fensterLabel: 'Innenraum',
     kurztext: 'Material, Licht und Raumfolge im Detail.',
     text: 'Von der Möblierung bis zur Lichtplanung gestalten wir Innenräume, die die architektonische Idee bis ins letzte Detail weiterführen — für Wohn-, Büro- und Empfangsbereiche.'
   },
   {
     slug: 'staedtebau-wettbewerbe',
     label: 'Städtebau & Wettbewerbe',
+    fensterLabel: 'Städtebau',
     kurztext: 'Von der Quartiersidee bis zur Wettbewerbsabgabe.',
     text: 'Wir entwickeln städtebauliche Konzepte und vertreten unsere Entwürfe in offenen und geladenen Wettbewerbsverfahren — mit einem Blick für Maßstab, Nutzungsmischung und öffentlichen Raum.'
   },
   {
     slug: 'baumanagement',
     label: 'Baumanagement & Bauleitung',
+    fensterLabel: 'Baumanagement',
     kurztext: 'Qualität und Termine auf der Baustelle sichern.',
     text: 'Örtliche Bauaufsicht, Kostenkontrolle und Schnittstellenkoordination zwischen Gewerken — wir sorgen dafür, dass aus dem Plan tatsächlich das gebaute Ergebnis wird.'
   }
