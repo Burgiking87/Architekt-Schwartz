@@ -1,6 +1,6 @@
 // ══════════════════════════════════════════
 // main.js — Interactivity & Animations
-// ══════════════════════════════════════════
+// ════════════════════════════════════════════
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -313,40 +313,26 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ────────────────────────────────────
-     HERO BUILDING — MOUSE PARALLAX
+
+     HAUS — ATMOSPHÄRE BEI MAUSBEWEGUNG
+
+     Der Baukörper selbst bleibt bewusst unbewegt: Er ist der feste Rahmen,
+     der über alle Ebenen hinweg an derselben Stelle steht. Nur Hintergrund,
+     Schwebeelemente und die Fensterhelligkeit reagieren auf den Zeiger.
   ──────────────────────────────────── */
-  const heroVisual   = document.getElementById('heroVisual');
-  const heroBuilding = document.getElementById('heroBuilding');
-  const parallaxBg   = document.getElementById('parallaxBg');
+  const houseStage  = document.getElementById('houseStage');
+  const parallaxBg  = document.getElementById('parallaxBg');
 
-  if (heroVisual) {
-    heroVisual.addEventListener('mousemove', e => {
-      const rect = heroVisual.getBoundingClientRect();
-      const cx   = rect.left + rect.width  / 2;
-      const cy   = rect.top  + rect.height / 2;
-      const dx   = (e.clientX - cx) / rect.width;   // -0.5 … +0.5
-      const dy   = (e.clientY - cy) / rect.height;
+  if (houseStage) {
+    houseStage.addEventListener('mousemove', e => {
+      const rect = houseStage.getBoundingClientRect();
+      const dx   = (e.clientX - (rect.left + rect.width  / 2)) / rect.width;
+      const dy   = (e.clientY - (rect.top  + rect.height / 2)) / rect.height;
 
-      // Main building: gentle float
-      if (heroBuilding) {
-        heroBuilding.style.transform =
-          `translate(${dx * 18}px, ${dy * 12}px) rotate(${dx * 1.2}deg)`;
-      }
-
-      // Background layer moves opposite (parallax depth)
       if (parallaxBg) {
-        parallaxBg.style.transform =
-          `translate(${-dx * 28}px, ${-dy * 18}px)`;
+        parallaxBg.style.transform = `translate(${-dx * 28}px, ${-dy * 18}px)`;
       }
 
-      // Building tilt via SVG group
-      const buildingMain = document.querySelector('.building-main');
-      if (buildingMain) {
-        buildingMain.style.transform =
-          `perspective(800px) rotateY(${dx * 8}deg) rotateX(${-dy * 5}deg)`;
-      }
-
-      // Float elements drift
       document.querySelectorAll('.float-rect').forEach((el, i) => {
         const factor = (i % 2 === 0 ? 1 : -1) * (i + 1);
         el.style.transform = `translate(${dx * 12 * factor}px, ${dy * 8 * factor}px)`;
@@ -356,26 +342,21 @@ document.addEventListener('DOMContentLoaded', () => {
         el.style.transform = `translate(${dx * 15 * factor}px, ${dy * 10 * factor}px)`;
       });
 
-      // Window glow: windows closest to cursor brighten
+      // Fenster in Zeigernähe leuchten auf
       document.querySelectorAll('#heroBuildingSvg .win').forEach(win => {
         const wr = win.getBoundingClientRect();
-        const wdx = (wr.left + wr.width/2) - e.clientX;
-        const wdy = (wr.top  + wr.height/2) - e.clientY;
-        const dist = Math.sqrt(wdx*wdx + wdy*wdy);
+        const wdx = (wr.left + wr.width / 2) - e.clientX;
+        const wdy = (wr.top + wr.height / 2) - e.clientY;
+        const dist = Math.sqrt(wdx * wdx + wdy * wdy);
         const bright = Math.max(0, 1 - dist / 200);
-        const base = parseInt(win.getAttribute('fill').replace('#',''), 16);
-        const boost = Math.round(bright * 40);
-        win.style.filter = boost > 5
+        win.style.filter = bright > 0.12
           ? `brightness(${1 + bright * 0.8})`
           : 'brightness(1)';
       });
     });
 
-    heroVisual.addEventListener('mouseleave', () => {
-      if (heroBuilding) heroBuilding.style.transform = '';
-      if (parallaxBg)   parallaxBg.style.transform = '';
-      const buildingMain = document.querySelector('.building-main');
-      if (buildingMain) buildingMain.style.transform = '';
+    houseStage.addEventListener('mouseleave', () => {
+      if (parallaxBg) parallaxBg.style.transform = '';
       document.querySelectorAll('.float-rect, .float-dot').forEach(el => {
         el.style.transform = '';
       });
@@ -588,13 +569,52 @@ document.addEventListener('DOMContentLoaded', () => {
   ──────────────────────────────────── */
   // Jede Seite mit einem Haus setzt window.PAGE_HOUSE, bevor main.js läuft
   // (siehe index.html / projekte/index.html / team/index.html / ...).
+  // Größe und Position kommen ausschließlich aus house.js + CSS, damit das
+  // Haus auf allen Ebenen deckungsgleich steht.
   if (window.PAGE_HOUSE && typeof renderHouse === 'function') {
     const houseMount = document.getElementById(window.PAGE_HOUSE.mountId);
     if (houseMount) {
-      renderHouse(houseMount, { variant: window.PAGE_HOUSE.variant, items: window.PAGE_HOUSE.items, bodyWidth: window.PAGE_HOUSE.bodyWidth });
+      renderHouse(houseMount, {
+        variant: window.PAGE_HOUSE.variant,
+        items: window.PAGE_HOUSE.items,
+        activeIndex: window.PAGE_HOUSE.activeIndex
+      });
       bindHover('.house-unit');
     }
   }
+
+  // Detailbereich links: nur belegt, wenn ein konkretes Projekt oder
+  // Teammitglied geöffnet ist. Auf den Haus-Ebenen bleibt er leer, damit
+  // die linke Seite unverändert stehen bleibt.
+  if (window.PAGE_DETAIL) {
+    const panel = document.getElementById('detailPanel');
+    if (panel) {
+      const d = window.PAGE_DETAIL;
+      let html = '';
+      if (d.eyebrow) html += '<p class="detail-eyebrow">' + d.eyebrow + '</p>';
+      if (d.name) html += '<h2 class="detail-name">' + d.name + '</h2>';
+      if (d.meta) html += '<p class="detail-meta">' + d.meta + '</p>';
+      if (d.text) html += '<p class="detail-text">' + d.text + '</p>';
+      if (d.tags && d.tags.length) {
+        html += '<div class="detail-block"><span class="contact-label">Zuständigkeiten</span>'
+          + '<div class="member-tags">'
+          + d.tags.map(function (t) { return '<span class="member-tag">' + t + '</span>'; }).join('')
+          + '</div></div>';
+      }
+      if (d.links && d.links.length) {
+        html += '<div class="detail-block"><span class="contact-label">Kontakt</span><div class="detail-links">'
+          + d.links.map(function (l) {
+              return '<a class="detail-link" href="' + l.href + '">' + l.label + '</a>';
+            }).join('')
+          + '</div></div>';
+      }
+      panel.innerHTML = html;
+    }
+  }
+
+  // Die Galerie ist seit dem Shell-Umbau eine normale Sektion der Startseite
+  // (früher ein eigener Tab) und wird deshalb direkt beim Laden aufgebaut.
+  if (document.getElementById('galleryMasonry')) buildGallery('all');
 
   initTiltCards();
   startCounters();
