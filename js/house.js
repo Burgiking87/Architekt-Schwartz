@@ -1,7 +1,7 @@
 // ══════════════════════════════════════════
 // house.js — wiederverwendbare Haus-Komponente
 //
-// renderHouse(mountEl, { variant, items })
+// renderHouse(mountEl, { variant, items, activeIndex })
 //   variant "floors"    → feste Anzahl Stockwerke (Startseite, Projekte)
 //   variant "windows"   → Fensterraster, Zeilen/Spalten aus items.length
 //                          berechnet (Team, Kontakt)
@@ -12,6 +12,13 @@
 //   item.image (optional): fertiges SVG-Markup (z. B. ein Porträt), wird
 //   in einem verschachtelten <svg> fenster-füllend eingebettet statt der
 //   schlichten Fensterfläche — für Team-Fotos.
+// activeIndex (optional): hebt ein Fenster hervor (Detailseiten).
+//
+// WICHTIG — feste Bauweise: viewBox, Baukörper und Dach haben auf JEDER
+// Seite exakt dieselben Maße. Nur der Fensterinhalt wird innerhalb dieser
+// festen Höhe verteilt (mehr Items → kleinere Fenster). Dadurch steht das
+// Haus beim Navigieren unbewegt an derselben Stelle, und nur der Inhalt
+// tauscht sich aus.
 //
 // Jede Etage/jedes Fenster ist ein echtes <a>, absolut positioniert über
 // einer programmatisch erzeugten SVG-Illustration (kein Copy-Paste-Markup
@@ -19,11 +26,17 @@
 // ══════════════════════════════════════════
 
 (function () {
-  const BODY_MARGIN = 80;
-  const BODY_W_DEFAULT = 240;
-  const BODY_TOP = 80;
-  const ROOF_HEIGHT = 34;
-  const ROOF_OVERHANG = 14;
+  // ── Feste Geometrie: gilt unverändert für alle Seiten und Varianten ──
+  const VB_W = 400;          // viewBox-Breite
+  const BODY_X = 50;         // linke Kante des Baukörpers
+  const BODY_W = 300;        // Breite des Baukörpers
+  const BODY_TOP = 92;       // Oberkante Baukörper (darüber liegt das Dach)
+  const BODY_H = 372;        // FESTE Höhe des Baukörpers
+  const DOOR_H = 52;         // Sockel/Eingangszone unter dem Baukörper
+  const VB_H = BODY_TOP + BODY_H + DOOR_H + 30;
+  const BODY_BOTTOM = BODY_TOP + BODY_H;
+  const ROOF_HEIGHT = 44;
+  const ROOF_OVERHANG = 18;
 
   function esc(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -46,68 +59,71 @@
     return `<rect class="win" ${dataAttr} x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" fill="${index % 2 === 0 ? '#2a2a28' : '#3a3a38'}"/>`;
   }
 
-  // ── Dach: kleines Satteldach oberhalb des Baukörpers, passt in die
-  //    ohnehin vorhandene Reserve über BODY_TOP — Bauweise identisch auf
-  //    allen Seiten, wirkt auf Unterseiten kleiner, weil deren Haus-
-  //    Container schmäler ist als der Hero auf der Startseite.
-  function buildRoof(bodyX, bodyW) {
-    const apexX = bodyX + bodyW / 2;
+  // ── Dach: Satteldach über dem Baukörper. Feste Maße wie der Rest des
+  //    Hauses, damit die Silhouette auf allen Seiten deckungsgleich ist.
+  function buildRoof() {
+    const apexX = BODY_X + BODY_W / 2;
     const apexY = BODY_TOP - ROOF_HEIGHT;
-    const leftX = bodyX - ROOF_OVERHANG;
-    const rightX = bodyX + bodyW + ROOF_OVERHANG;
+    const leftX = BODY_X - ROOF_OVERHANG;
+    const rightX = BODY_X + BODY_W + ROOF_OVERHANG;
     return `<polygon points="${leftX},${BODY_TOP} ${apexX},${apexY} ${rightX},${BODY_TOP}" fill="url(#buildingGrad)" stroke="#2a2a28" stroke-width="0.8"/>` +
       `<line x1="${leftX}" x2="${rightX}" y1="${BODY_TOP}" y2="${BODY_TOP}" stroke="#2a2a28" stroke-width="1"/>`;
   }
 
-  // ── Stockwerke: bestehende Anzahl teilt die Gebäudehöhe gleichmäßig,
-  //    das unterste Stockwerk bekommt den Eingang.
-  function buildFloors(items, bodyX, bodyW, vbW) {
+  // Eingang unten mittig — gehört zum festen Baukörper, nicht zum Inhalt.
+  function buildDoor() {
+    const doorW = 84, doorH = 66;
+    const doorX = BODY_X + (BODY_W - doorW) / 2;
+    const doorY = BODY_BOTTOM - doorH;
+    return `<rect x="${doorX}" y="${doorY}" width="${doorW}" height="${doorH}" fill="#1a1a18"/>` +
+      `<line x1="${doorX + doorW / 2}" x2="${doorX + doorW / 2}" y1="${doorY}" y2="${BODY_BOTTOM}" stroke="#2a2a28" stroke-width="0.8"/>`;
+  }
+
+  // Der Bereich, in dem Inhalte Platz finden: der Baukörper ohne die
+  // Eingangszone ganz unten.
+  const CONTENT_TOP = BODY_TOP;
+  const CONTENT_H = BODY_H - 74;
+
+  // ── Stockwerke: die Item-Anzahl teilt die feste Inhaltshöhe gleichmäßig.
+  function buildFloors(items) {
     const n = Math.max(items.length, 1);
-    const bodyH = 360;
-    const floorH = bodyH / n;
+    const floorH = CONTENT_H / n;
     const units = [];
     let winsSvg = '';
     let dividers = '';
 
     for (let i = 0; i < n; i++) {
-      const y = BODY_TOP + i * floorH;
-      const isGround = i === n - 1;
+      const y = CONTENT_TOP + i * floorH;
       const winCount = 3;
-      const gap = 10;
-      const winW = (bodyW - gap * (winCount + 1)) / winCount;
-      const winH = Math.max(20, floorH - 34);
-      const winY = y + (floorH - winH) / 2 - (isGround ? 10 : 0);
+      const gap = 12;
+      const winW = (BODY_W - gap * (winCount + 1)) / winCount;
+      const winH = Math.max(18, Math.min(floorH - 26, floorH * 0.62));
+      const winY = y + (floorH - winH) / 2;
 
       for (let w = 0; w < winCount; w++) {
-        if (isGround && w === 1) continue; // mittlere Achse bleibt für den Eingang frei
-        const wx = bodyX + gap + w * (winW + gap);
+        const wx = BODY_X + gap + w * (winW + gap);
         winsSvg += `<rect class="win" data-floor="${i}" x="${wx.toFixed(1)}" y="${winY.toFixed(1)}" width="${winW.toFixed(1)}" height="${winH.toFixed(1)}" fill="${w % 2 === 0 ? '#2a2a28' : '#3a3a38'}"/>`;
       }
-      if (isGround) {
-        const doorW = 90, doorH = Math.min(70, floorH - 10);
-        const doorX = bodyX + (bodyW - doorW) / 2;
-        const doorY = BODY_TOP + bodyH - doorH;
-        winsSvg += `<rect data-floor="${i}" x="${doorX}" y="${doorY}" width="${doorW}" height="${doorH}" fill="#1a1a18"/><line x1="${doorX + doorW / 2}" x2="${doorX + doorW / 2}" y1="${doorY}" y2="${BODY_TOP + bodyH}" stroke="#2a2a28" stroke-width="0.8"/>`;
-      }
       if (i > 0) {
-        dividers += `<line x1="${bodyX}" x2="${bodyX + bodyW}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#2a2a28" stroke-width="1.4"/>`;
+        dividers += `<line x1="${BODY_X}" x2="${BODY_X + BODY_W}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#2a2a28" stroke-width="1.4"/>`;
       }
-      units.push({ x: bodyX, y, w: bodyW, h: floorH, floorIndex: i, item: items[i] });
+      units.push({ x: BODY_X, y, w: BODY_W, h: floorH, floorIndex: i, item: items[i] });
     }
 
-    return { winsSvg, dividers, units, vbW, vbH: BODY_TOP + bodyH + 60, bodyBottom: BODY_TOP + bodyH };
+    return { winsSvg, dividers, units };
   }
 
-  // ── Fenster: Raster ergibt sich aus der Item-Anzahl, wächst nach unten.
-  function buildWindows(items, bodyX, bodyW, vbW) {
+  // ── Fenster: Raster aus der Item-Anzahl, aber immer innerhalb der festen
+  //    Inhaltshöhe — mehr Items bedeuten kleinere Fenster, nicht ein
+  //    höheres Haus.
+  function buildWindows(items) {
     const n = Math.max(items.length, 1);
     const cols = Math.max(1, Math.min(3, Math.ceil(Math.sqrt(n))));
     const rows = Math.ceil(n / cols);
-    const floorH = 100;
-    const bodyH = rows * floorH;
-    const gap = 16;
-    const cellW = (bodyW - gap * (cols + 1)) / cols;
-    const cellH = floorH - 34;
+    const rowH = CONTENT_H / rows;
+    const gap = 14;
+    const cellW = (BODY_W - gap * (cols + 1)) / cols;
+    const cellH = Math.max(24, Math.min(rowH - 18, rowH * 0.72));
     const units = [];
     let winsSvg = '';
     let dividers = '';
@@ -115,27 +131,24 @@
     for (let i = 0; i < n; i++) {
       const col = i % cols;
       const row = Math.floor(i / cols);
-      const x = bodyX + gap + col * (cellW + gap);
-      const y = BODY_TOP + row * floorH + (floorH - cellH) / 2;
+      const x = BODY_X + gap + col * (cellW + gap);
+      const y = CONTENT_TOP + row * rowH + (rowH - cellH) / 2;
       winsSvg += winContent(items[i], i, x, y, cellW, cellH, 'data-index');
       units.push({ x, y, w: cellW, h: cellH, floorIndex: i, item: items[i] });
     }
     for (let r = 1; r < rows; r++) {
-      const y = BODY_TOP + r * floorH;
-      dividers += `<line x1="${bodyX}" x2="${bodyX + bodyW}" y1="${y}" y2="${y}" stroke="#2a2a28" stroke-width="0.6"/>`;
+      const y = CONTENT_TOP + r * rowH;
+      dividers += `<line x1="${BODY_X}" x2="${BODY_X + BODY_W}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#2a2a28" stroke-width="0.6"/>`;
     }
-    const doorW = 70, doorH = 50;
-    const doorX = bodyX + (bodyW - doorW) / 2;
-    const doorY = BODY_TOP + bodyH;
-    winsSvg += `<rect x="${doorX}" y="${doorY}" width="${doorW}" height="${doorH}" fill="#1a1a18"/>`;
 
-    return { winsSvg, dividers, units, vbW, vbH: BODY_TOP + bodyH + doorH + 40, bodyBottom: BODY_TOP + bodyH + doorH };
+    return { winsSvg, dividers, units };
   }
 
   // ── Verstreute Fenster: wechselnde Anzahl pro Reihe (1–3) und wechselnde
   //    Breiten/Höhen, deterministisch aus dem Index erzeugt — wirkt organisch
-  //    statt streng gerastert, bleibt aber bei jedem Rendern gleich.
-  function buildScattered(items, bodyX, bodyW, vbW) {
+  //    statt streng gerastert. Die Reihenhöhen werden anschließend auf die
+  //    feste Inhaltshöhe normiert, damit das Haus nicht mitwächst.
+  function buildScattered(items) {
     const n = Math.max(items.length, 1);
     const gap = 14;
     const rowCounts = [];
@@ -149,27 +162,29 @@
       rowSeed++;
     }
 
-    const rowHeights = rowCounts.map((_, ri) => 88 + seeded(ri * 3.1 + 5) * 34);
-    const bodyH = rowHeights.reduce((a, b) => a + b, 0);
+    const rawHeights = rowCounts.map((_, ri) => 88 + seeded(ri * 3.1 + 5) * 34);
+    const rawTotal = rawHeights.reduce((a, b) => a + b, 0);
+    const scale = CONTENT_H / rawTotal;
+    const rowHeights = rawHeights.map(h => h * scale);
 
     const units = [];
     let winsSvg = '';
     let idx = 0;
-    let curY = BODY_TOP;
+    let curY = CONTENT_TOP;
 
     rowCounts.forEach((count, ri) => {
       const rowH = rowHeights[ri];
       const totalGap = gap * (count + 1);
-      const avail = bodyW - totalGap;
+      const avail = BODY_W - totalGap;
       const weights = [];
       for (let c = 0; c < count; c++) weights.push(0.55 + seeded(idx + c + 100) * 0.9);
       const sumW = weights.reduce((a, b) => a + b, 0);
 
-      let cx = bodyX + gap;
+      let cx = BODY_X + gap;
       for (let c = 0; c < count; c++) {
         const w = (weights[c] / sumW) * avail;
-        const hJitter = seeded(idx + c + 300) * 20 - 10;
-        const wh = Math.max(34, Math.min(rowH - 16, rowH - 30 + hJitter));
+        const jitter = (seeded(idx + c + 300) * 0.12) - 0.06;
+        const wh = Math.max(30, Math.min(rowH - 14, rowH * (0.7 + jitter)));
         const wy = curY + (rowH - wh) / 2;
         winsSvg += winContent(items[idx], idx, cx, wy, w, wh, 'data-index');
         units.push({ x: cx, y: wy, w, h: wh, floorIndex: idx, item: items[idx] });
@@ -179,33 +194,25 @@
       curY += rowH;
     });
 
-    const doorW = 70, doorH = 50;
-    const doorX = bodyX + (bodyW - doorW) / 2;
-    const doorY = BODY_TOP + bodyH;
-    winsSvg += `<rect x="${doorX}" y="${doorY}" width="${doorW}" height="${doorH}" fill="#1a1a18"/>`;
-
-    return { winsSvg, dividers: '', units, vbW, vbH: BODY_TOP + bodyH + doorH + 40, bodyBottom: BODY_TOP + bodyH + doorH };
+    return { winsSvg, dividers: '', units };
   }
 
   function renderHouse(mount, opts) {
     if (!mount) return;
     const items = (opts && opts.items) || [];
     const variant = (opts && opts.variant) || 'windows';
-    const bodyW = (opts && opts.bodyWidth) || BODY_W_DEFAULT;
-    const bodyX = BODY_MARGIN;
-    const vbW = bodyW + BODY_MARGIN * 2;
-    const built = variant === 'floors' ? buildFloors(items, bodyX, bodyW, vbW)
-      : variant === 'scattered' ? buildScattered(items, bodyX, bodyW, vbW)
-      : buildWindows(items, bodyX, bodyW, vbW);
-    const { vbH, bodyBottom, units, winsSvg, dividers } = built;
+    const activeIndex = (opts && typeof opts.activeIndex === 'number') ? opts.activeIndex : -1;
+    const built = variant === 'floors' ? buildFloors(items)
+      : variant === 'scattered' ? buildScattered(items)
+      : buildWindows(items);
+    const { units, winsSvg, dividers } = built;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const vThird1 = bodyX + bodyW / 3;
-    const vThird2 = bodyX + (bodyW * 2) / 3;
-    const roofSvg = buildRoof(bodyX, bodyW);
+    const vThird1 = BODY_X + BODY_W / 3;
+    const vThird2 = BODY_X + (BODY_W * 2) / 3;
 
     mount.innerHTML = `
-      <svg id="heroBuildingSvg" viewBox="0 0 ${vbW} ${vbH}" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg id="heroBuildingSvg" viewBox="0 0 ${VB_W} ${VB_H}" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="buildingGrad" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stop-color="#1a1a18"/>
@@ -218,33 +225,36 @@
           </linearGradient>
         </defs>
         <g class="sky-particles">
-          <circle cx="${vbW * 0.13}" cy="${BODY_TOP * 0.5}" r="1" fill="#3a3a38" opacity="0.4"/>
-          <circle cx="${vbW * 0.3}" cy="${BODY_TOP * 0.28}" r="1.5" fill="#3a3a38" opacity="0.3"/>
-          <circle cx="${vbW * 0.62}" cy="${BODY_TOP * 0.65}" r="1" fill="#3a3a38" opacity="0.5"/>
-          <circle cx="${vbW * 0.9}" cy="${BODY_TOP * 0.35}" r="1" fill="#3a3a38" opacity="0.4"/>
+          <circle cx="${VB_W * 0.13}" cy="${BODY_TOP * 0.5}" r="1" fill="#3a3a38" opacity="0.4"/>
+          <circle cx="${VB_W * 0.3}" cy="${BODY_TOP * 0.28}" r="1.5" fill="#3a3a38" opacity="0.3"/>
+          <circle cx="${VB_W * 0.62}" cy="${BODY_TOP * 0.65}" r="1" fill="#3a3a38" opacity="0.5"/>
+          <circle cx="${VB_W * 0.9}" cy="${BODY_TOP * 0.35}" r="1" fill="#3a3a38" opacity="0.4"/>
         </g>
-        <g class="building-main" style="transform-origin:${bodyX + bodyW / 2}px ${bodyBottom}px;">
-          ${roofSvg}
-          <rect x="${bodyX}" y="${BODY_TOP}" width="${bodyW}" height="${bodyBottom - BODY_TOP}" fill="url(#buildingGrad)" stroke="#2a2a28" stroke-width="0.5"/>
-          <line x1="${vThird1}" x2="${vThird1}" y1="${BODY_TOP}" y2="${bodyBottom}" stroke="#2a2a28" stroke-width="0.8"/>
-          <line x1="${vThird2}" x2="${vThird2}" y1="${BODY_TOP}" y2="${bodyBottom}" stroke="#2a2a28" stroke-width="0.8"/>
+        <g class="building-shell">
+          ${buildRoof()}
+          <rect x="${BODY_X}" y="${BODY_TOP}" width="${BODY_W}" height="${BODY_H}" fill="url(#buildingGrad)" stroke="#2a2a28" stroke-width="0.5"/>
+          <line x1="${vThird1}" x2="${vThird1}" y1="${BODY_TOP}" y2="${BODY_BOTTOM}" stroke="#2a2a28" stroke-width="0.8"/>
+          <line x1="${vThird2}" x2="${vThird2}" y1="${BODY_TOP}" y2="${BODY_BOTTOM}" stroke="#2a2a28" stroke-width="0.8"/>
+          ${buildDoor()}
+        </g>
+        <g class="building-content">
           ${dividers}
           ${winsSvg}
         </g>
-        <line x1="0" x2="${vbW}" y1="${bodyBottom}" y2="${bodyBottom}" stroke="#2a2a28" stroke-width="1"/>
-        <rect x="${bodyX}" y="${bodyBottom}" width="${bodyW}" height="50" fill="url(#reflGrad)" opacity="0.3"/>
+        <line x1="0" x2="${VB_W}" y1="${BODY_BOTTOM}" y2="${BODY_BOTTOM}" stroke="#2a2a28" stroke-width="1"/>
+        <rect x="${BODY_X}" y="${BODY_BOTTOM}" width="${BODY_W}" height="50" fill="url(#reflGrad)" opacity="0.3"/>
         <g class="float-elements">
-          <rect class="float-rect" x="${bodyX - 50}" y="${BODY_TOP + (bodyBottom - BODY_TOP) * 0.35}" width="30" height="2" fill="#3a3a38" opacity="0.4"/>
-          <rect class="float-rect" x="${bodyX + bodyW + 20}" y="${BODY_TOP + (bodyBottom - BODY_TOP) * 0.55}" width="25" height="2" fill="#3a3a38" opacity="0.3"/>
-          <circle class="float-dot" cx="${bodyX + bodyW + 30}" cy="${BODY_TOP + (bodyBottom - BODY_TOP) * 0.25}" r="3" fill="none" stroke="#3a3a38" stroke-width="1" opacity="0.5"/>
-          <circle class="float-dot" cx="${bodyX - 55}" cy="${BODY_TOP + (bodyBottom - BODY_TOP) * 0.7}" r="2" fill="none" stroke="#3a3a38" stroke-width="1" opacity="0.4"/>
+          <rect class="float-rect" x="${BODY_X - 42}" y="${BODY_TOP + BODY_H * 0.35}" width="26" height="2" fill="#3a3a38" opacity="0.4"/>
+          <rect class="float-rect" x="${BODY_X + BODY_W + 16}" y="${BODY_TOP + BODY_H * 0.55}" width="22" height="2" fill="#3a3a38" opacity="0.3"/>
+          <circle class="float-dot" cx="${BODY_X + BODY_W + 26}" cy="${BODY_TOP + BODY_H * 0.25}" r="3" fill="none" stroke="#3a3a38" stroke-width="1" opacity="0.5"/>
+          <circle class="float-dot" cx="${BODY_X - 30}" cy="${BODY_TOP + BODY_H * 0.7}" r="2" fill="none" stroke="#3a3a38" stroke-width="1" opacity="0.4"/>
         </g>
       </svg>
       <div class="house-overlay" role="list"></div>
       <ul class="house-fallback"></ul>
     `;
 
-    mount.style.aspectRatio = vbW + ' / ' + vbH;
+    mount.style.aspectRatio = VB_W + ' / ' + VB_H;
 
     // Gestapeltes Fallback: auf sehr schmalen Screens per CSS statt der
     // Overlay-Links gezeigt, damit Touch-Targets nie zu klein werden.
@@ -265,20 +275,18 @@
     units.forEach((u, i) => {
       const item = u.item;
       if (!item) return;
-      const left = (u.x / vbW * 100).toFixed(2) + '%';
-      const top = (u.y / vbH * 100).toFixed(2) + '%';
-      const width = (u.w / vbW * 100).toFixed(2) + '%';
-      const height = (u.h / vbH * 100).toFixed(2) + '%';
 
       const a = document.createElement('a');
-      a.className = 'house-unit house-unit-' + variant + (item.image ? ' has-photo' : '');
+      a.className = 'house-unit house-unit-' + variant + (item.image ? ' has-photo' : '')
+        + (i === activeIndex ? ' is-active' : '');
       a.href = item.href || '#';
       a.setAttribute('role', 'listitem');
       a.setAttribute('aria-label', item.ariaLabel || item.label || '');
-      a.style.left = left;
-      a.style.top = top;
-      a.style.width = width;
-      a.style.height = height;
+      if (i === activeIndex) a.setAttribute('aria-current', 'page');
+      a.style.left = (u.x / VB_W * 100).toFixed(2) + '%';
+      a.style.top = (u.y / VB_H * 100).toFixed(2) + '%';
+      a.style.width = (u.w / VB_W * 100).toFixed(2) + '%';
+      a.style.height = (u.h / VB_H * 100).toFixed(2) + '%';
       a.innerHTML = `<span class="house-unit-label">${esc(item.label || '')}</span>`;
 
       const litAttr = variant === 'floors' ? 'data-floor' : 'data-index';
@@ -288,17 +296,18 @@
       function setLit(on) {
         litTargets.forEach(el => { el.style.filter = on ? 'brightness(1.8)' : ''; });
       }
+      if (i === activeIndex) setLit(true);
       a.addEventListener('mouseenter', () => setLit(true));
-      a.addEventListener('mouseleave', () => setLit(false));
+      a.addEventListener('mouseleave', () => { if (i !== activeIndex) setLit(false); });
       a.addEventListener('focus', () => setLit(true));
-      a.addEventListener('blur', () => setLit(false));
+      a.addEventListener('blur', () => { if (i !== activeIndex) setLit(false); });
 
-      if (!reduceMotion) {
-        a.style.transitionDelay = (i * 0.08) + 's';
-      }
       overlay.appendChild(a);
     });
 
+    // Der Baukörper steht sofort; nur der Inhalt (Fenster + Beschriftungen)
+    // faded kurz ein — so wirkt der Seitenwechsel wie ein Austausch im
+    // selben Haus statt wie ein Neuaufbau.
     if (!reduceMotion) {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => overlay.classList.add('in'));
