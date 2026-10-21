@@ -1019,10 +1019,16 @@ body { padding-left: 0; }
 }
 
 .brand { display: block; flex: none; text-decoration: none; color: var(--white); }
+/* Größe folgt exakt der verfügbaren Sidebar-Breite (33.333vw minus
+   horizontales Padding), damit der Name auf jedem Schirm so groß
+   wie möglich ist, ohne dass „ARCHITEKT“ im overflow:hidden der
+   Sidebar abgeschnitten wird. 6.38em = Laufweite von „ARCHITEKT“
+   (Archivo Black inkl. Tracking, via opentype.js gemessen);
+   0.94 = geplante Luft für Glyph-Rundung der Renderer-Engines. */
 .brand-line {
   display: block;
   font-family: var(--font-brutal);
-  font-size: clamp(1.7rem, 3.4vw, 4.2rem);
+  font-size: clamp(1.7rem, calc((33.333vw - 6rem) * 0.147), 6.8rem);
   font-weight: 400; line-height: 0.95;
   letter-spacing: -0.02em; text-transform: uppercase;
 }
@@ -1031,7 +1037,7 @@ body { padding-left: 0; }
   font-style: italic; font-weight: 300;
   text-transform: none; letter-spacing: -0.01em;
   color: var(--gray-mid);
-  font-size: clamp(2.2rem, 4.5vw, 5.4rem);
+  font-size: clamp(2.2rem, calc((33.333vw - 6rem) * 0.195), 7.5rem);
   transition: color 0.4s var(--transition);
 }
 .brand:hover .brand-line-serif, .brand:focus-visible .brand-line-serif { color: var(--white); }
@@ -1195,8 +1201,8 @@ html.stage-leaving  .stage { animation: stageOut calc(var(--stage-dur) - 0.08s) 
     height: 64px; padding: 0 1.3rem;
     align-items: center; justify-content: space-between;
   }
-  .brand-line { font-size: 0.92rem; line-height: 1.05; }
-  .brand-line-serif { font-size: 1.08rem; }
+  .brand-line { font-size: 0.92rem; line-height: 1.02; }
+  .brand-line-serif { font-size: 1.22rem; }
   .stage, .page { padding-top: 64px; }
   .house-view { min-height: calc(100vh - 64px); }
 }
