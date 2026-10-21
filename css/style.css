@@ -1,4 +1,4 @@
-/* ══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════
    Architekt Schwartz — Architektur Website
    style.css
 ═════════════════════════════════════════════ */
@@ -155,7 +155,7 @@ nav {
    Links: fester Titel + Detailbereich.
    Rechts: das Haus, auf jeder Ebene exakt
    gleich groß und gleich positioniert.
-══════════════════════════════════════ */
+═════════════════════════════════════ */
 .shell {
   min-height: calc(100vh - 80px);
   display: grid; grid-template-columns: 1fr 1fr;
@@ -370,7 +370,7 @@ nav {
    .house-mount trägt die SVG-Illustration,
    .house-overlay die echten <a>-Stockwerke/
    -Fenster darüber (per JS positioniert).
-══════════════════════════════════════ */
+═════════════════════════════════════ */
 .house-mount {
   position: relative; width: 100%;
   filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));
@@ -473,7 +473,7 @@ nav {
 
 /* ══════════════════════════════════════
    SHELL — Responsive & Seitenübergang
-══════════════════════════════════════ */
+═════════════════════════════════════ */
 @media (max-width: 900px) {
   /* Zweiteilung auflösen: Titel oben, Haus darunter, Details zuletzt. */
   .shell { grid-template-columns: 1fr; min-height: 0; }
@@ -505,7 +505,7 @@ nav {
 
 /* ══════════════════════════════════════
    TEAM-MITGLIED (Detailseite)
-══════════════════════════════════════ */
+═════════════════════════════════════ */
 .member-back { padding: 2.5rem 3rem 0; }
 .member-hero {
   padding: 3rem 3rem 6rem;
@@ -547,7 +547,7 @@ nav {
 
 /* ══════════════════════════════════════
    PAGE 3 — GALLERY
-══════════════════════════════════════ */
+═════════════════════════════════════ */
 .gallery-header {
   padding: 6rem 3rem 4rem;
   border-bottom: var(--line);
@@ -651,7 +651,7 @@ nav {
 
 /* ══════════════════════════════════════
    KONTAKT — Anker-Blöcke & Formular
-══════════════════════════════════════ */
+═════════════════════════════════════ */
 .contact-label {
   display: block;
   font-family: var(--font-mono);
@@ -733,7 +733,7 @@ footer {
 
 /* ══════════════════════════════════════
    GLOBAL TEXTURE / CHROME
-══════════════════════════════════════ */
+═════════════════════════════════════ */
 .noise-overlay {
   position: fixed; inset: 0; z-index: 9997;
   pointer-events: none; opacity: 0.05; mix-blend-mode: overlay;
@@ -766,7 +766,7 @@ nav.nav-hidden { transform: translateY(-100%); }
 
 /* ══════════════════════════════════════
    BÜROHUND (Bacchus)
-══════════════════════════════════════ */
+═════════════════════════════════════ */
 .corner-dog {
   position: fixed; bottom: 1.5rem; right: 1.5rem;
   width: 120px; z-index: 9996;
@@ -840,7 +840,7 @@ nav.nav-hidden { transform: translateY(-100%); }
 
 /* ══════════════════════════════════════
    SCROLL REVEAL — SPLIT LINES
-══════════════════════════════════════ */
+═════════════════════════════════════ */
 .split-lines .rline { display: block; overflow: hidden; }
 .split-lines .rline-inner {
   display: block; transform: translateY(112%); opacity: 0;
@@ -850,7 +850,7 @@ nav.nav-hidden { transform: translateY(-100%); }
 
 /* ══════════════════════════════════════
    SCROLL REVEAL — CLIP WIPE (cards/grids)
-══════════════════════════════════════ */
+═════════════════════════════════════ */
 .reveal-clip {
   clip-path: inset(100% 0 0 0);
   opacity: 0;
@@ -865,7 +865,7 @@ nav.nav-hidden { transform: translateY(-100%); }
 
 /* ══════════════════════════════════════
    PROJEKT-DETAILSEITE (projekt.html)
-══════════════════════════════════════ */
+═════════════════════════════════════ */
 .projekt-info { padding: 3rem 3rem 4rem; border-bottom: var(--line); }
 .projekt-info-main {
   display: flex; align-items: baseline; gap: 1.2rem; flex-wrap: wrap; margin-bottom: 1rem;
@@ -880,7 +880,7 @@ nav.nav-hidden { transform: translateY(-100%); }
 
 /* ══════════════════════════════════════
    LIGHTBOX (Projektbilder)
-══════════════════════════════════════ */
+═════════════════════════════════════ */
 .lightbox { position: fixed; inset: 0; z-index: 10000; }
 .lightbox[hidden] { display: none; }
 .lightbox-backdrop {
@@ -929,7 +929,7 @@ nav.nav-hidden { transform: translateY(-100%); }
 
 /* ══════════════════════════════════════
    REDUCED MOTION
-══════════════════════════════════════ */
+═════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .split-lines .rline-inner { transition: opacity 0.3s ease; transform: none !important; }
@@ -1021,8 +1021,8 @@ body { padding-left: 0; }
 .brand { display: block; flex: none; text-decoration: none; color: var(--white); margin-inline: -2rem; }
 /* Die Marke nutzt zusätzlich 2rem auf jeder Seite (negativer Rand),
    damit sie auf jedem Schirm so groß wie möglich ist, ohne dass
-   "ARCHITEKT" im overflow:hidden der Sidebar abgeschnitten wird.
-   6.24em = Laufweite von "ARCHITEKT" (Archivo Black, Tracking
+   „ARCHITEKT“ im overflow:hidden der Sidebar abgeschnitten wird.
+   6.24em = Laufweite von „ARCHITEKT“ (Archivo Black, Tracking
    -0.035em, via opentype.js gemessen). Faktor = 0.97 / 6.24:
    Füllt 97 % der verfügbaren Breite, 3 % Luft für Glyph-Rundung. */
 .brand-line {
