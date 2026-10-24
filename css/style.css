@@ -331,7 +331,7 @@ nav {
   text-transform: uppercase; color: var(--gray-mid);
 }
 
-/* Einfache Texteiten (Impressum, Nicht-gefunden) behalten einen
+/* Einfache Textseiten (Impressum, Nicht-gefunden) behalten einen
    schlichten, gestapelten Kopfbereich. */
 .subpage-hero {
   padding: 6rem 3rem 3rem;
@@ -1033,8 +1033,7 @@ body { padding-left: 0; }
   font-size: clamp(0.62rem, calc((33.333vw - 2rem) * 0.094), 5.2rem);
   font-weight: 600; line-height: 1.05;
   letter-spacing: 0.42em; text-transform: uppercase;
-  /* Letzter Buchstabe traegt sein Tracking mit — optisch neutralisieren,
-     damit die Zeile exakt an derselben Kante endet wie SCHWARTZ. */
+  /* Letzter Buchstabe traegt sein Tracking mit -- optisch neutralisieren */
   margin-right: -0.42em;
   color: var(--gray-mid);
 }
