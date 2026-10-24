@@ -331,7 +331,7 @@ nav {
   text-transform: uppercase; color: var(--gray-mid);
 }
 
-/* Einfache Textseiten (Impressum, Nicht-gefunden) behalten einen
+/* Einfache Texteiten (Impressum, Nicht-gefunden) behalten einen
    schlichten, gestapelten Kopfbereich. */
 .subpage-hero {
   padding: 6rem 3rem 3rem;
@@ -1019,28 +1019,33 @@ body { padding-left: 0; }
 }
 
 .brand { display: block; flex: none; text-decoration: none; color: var(--white); margin-inline: -2rem; }
-/* Die Marke nutzt zusätzlich 2rem auf jeder Seite (negativer Rand),
-   damit sie auf jedem Schirm so groß wie möglich ist, ohne dass
-   „ARCHITEKT“ im overflow:hidden der Sidebar abgeschnitten wird.
-   6.24em = Laufweite von „ARCHITEKT“ (Archivo Black, Tracking
-   -0.035em, via opentype.js gemessen). Faktor = 0.97 / 6.24:
-   Füllt 97 % der verfügbaren Breite, 3 % Luft für Glyph-Rundung. */
+/* Logotyp nach der realen Firmenvorlage: oben "A R C H I T E K T"
+   klein und stark gesperrt, darunter "SCHWARTZ" fett in der Grotesk.
+   Beide Zeilen sind an die tatsaechlich verfuegbare Breite gekoppelt
+   (33.333vw - 2rem; die Marke ueberbrueckt via negativem Rand das
+   Sidebar-Padding), damit die Marke auf jedem Schirm maximal gross
+   ist, ohne dass etwas im overflow:hidden der Sidebar abgeschnitten
+   wird. Faktor = 0.95 / Wortlaenge (Helvetica Bold approximiert):
+   95 % Fuellung, 5 % Luft fuer Glyphen-Rundung. */
 .brand-line {
   display: block;
-  font-family: var(--font-brutal);
-  font-size: clamp(1.7rem, calc((33.333vw - 2rem) * 0.155), 8.6rem);
-  font-weight: 400; line-height: 0.95;
-  letter-spacing: -0.035em; text-transform: uppercase;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: clamp(0.62rem, calc((33.333vw - 2rem) * 0.094), 5.2rem);
+  font-weight: 600; line-height: 1.05;
+  letter-spacing: 0.42em; text-transform: uppercase;
+  /* Letzter Buchstabe traegt sein Tracking mit — optisch neutralisieren,
+     damit die Zeile exakt an derselben Kante endet wie SCHWARTZ. */
+  margin-right: -0.42em;
+  color: var(--gray-mid);
 }
 .brand-line-serif {
-  font-family: var(--font-serif);
-  font-style: italic; font-weight: 300;
-  text-transform: none; letter-spacing: -0.01em;
-  color: var(--gray-mid);
-  font-size: clamp(2.2rem, calc((33.333vw - 2rem) * 0.206), 10rem);
-  transition: color 0.4s var(--transition);
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-style: normal; font-weight: 700;
+  text-transform: uppercase; letter-spacing: -0.015em;
+  color: var(--white);
+  line-height: 1;
+  font-size: clamp(2.4rem, calc((33.333vw - 2rem) * 0.162), 9.4rem);
 }
-.brand:hover .brand-line-serif, .brand:focus-visible .brand-line-serif { color: var(--white); }
 .brand:focus-visible { outline: 1px solid var(--gray-dark); outline-offset: 12px; }
 
 .sidebar > .detail-panel {
@@ -1171,8 +1176,8 @@ html.stage-leaving  .stage { animation: stageOut calc(var(--stage-dur) - 0.08s) 
     background: rgba(10,10,10,0.94);
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
   }
-  .brand-line { font-size: 0.95rem; letter-spacing: 0.02em; }
-  .brand-line-serif { font-size: 1.15rem; }
+  .brand-line { font-size: 0.56rem; letter-spacing: 0.34em; margin-right: -0.34em; }
+  .brand-line-serif { font-size: 1.14rem; }
   .sidebar > .detail-panel { display: none; }
   .sidebar-foot {
     flex-direction: row; align-items: center; gap: 1.1rem;
@@ -1202,8 +1207,8 @@ html.stage-leaving  .stage { animation: stageOut calc(var(--stage-dur) - 0.08s) 
     align-items: center; justify-content: space-between;
   }
   .brand { margin-inline: 0; }
-  .brand-line { font-size: 1rem; line-height: 1.02; }
-  .brand-line-serif { font-size: 1.33rem; }
+  .brand-line { font-size: 0.62rem; line-height: 1.35; }
+  .brand-line-serif { font-size: 1.22rem; }
   .stage, .page { padding-top: 64px; }
   .house-view { min-height: calc(100vh - 64px); }
 }
